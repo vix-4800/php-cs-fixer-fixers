@@ -7,6 +7,8 @@ namespace Vix\PhpCsFixerFixers\Tests;
 use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
+use PhpCsFixer\FixerFactory;
+use PhpCsFixer\RuleSet\RuleSet;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -25,6 +27,7 @@ use Vix\PhpCsFixerFixers\Fixer\RemoveDocBlockTagsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
 use Vix\PhpCsFixerFixers\Fixer\RequireNullSafeOperatorFixer;
+use Vix\PhpCsFixerFixers\Fixers;
 
 final class FixerSmokeTest extends TestCase
 {
@@ -71,6 +74,22 @@ final class FixerSmokeTest extends TestCase
             "<?php\nif (\$value === null) {}\n",
             "<?php\nif (null === \$value) {}\n",
         );
+    }
+
+    public function testAllFixersCanBeUsedAsVixFixerRules(): void
+    {
+        $rules = [];
+
+        foreach (Fixers::all() as $fixer) {
+            $rules[$fixer->getName()] = true;
+        }
+
+        $factory = new FixerFactory();
+        $factory->registerBuiltInFixers();
+        $factory->registerCustomFixers(Fixers::all());
+        $factory->useRuleSet(new RuleSet($rules));
+
+        self::assertCount(count($rules), $factory->getFixers());
     }
 
     private static function assertFixes(AbstractFixer $fixer, string $expected, string $input): void

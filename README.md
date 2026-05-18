@@ -17,14 +17,12 @@ declare(strict_types=1);
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
-use Vix\PhpCsFixerFixers\Fixer\NoYodaComparisonFixer;
+use Vix\PhpCsFixerFixers\Fixers;
 
 $finder = Finder::create()->in(__DIR__ . '/src');
 
 return (new Config())
-    ->registerCustomFixers([
-        new NoYodaComparisonFixer(),
-    ])
+    ->registerCustomFixers(Fixers::all())
     ->setRules([
         'VixFixer/no_yoda_comparison' => true,
     ])
