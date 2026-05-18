@@ -1,5 +1,5 @@
 - PHP library of custom PHP-CS-Fixer fixers targeting PHP 8.4+.
 - Source fixers live in src/Fixer; registry is src/Fixers.php.
 - Dedicated fixer tests live in tests/Fixer; tests/FixerSmokeTest.php verifies registration/wiring.
-- Key commands: composer test, composer static-analysis, composer cs-fix-dry, composer cs-fix, composer check.
+- Key commands: composer test, composer static-analysis.
 - Keep diffs small and preserve fixer names unless semantics intentionally change.
