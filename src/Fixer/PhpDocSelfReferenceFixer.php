@@ -26,7 +26,7 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/phpdoc_self_reference';
+        return 'VixFixer/phpdoc_self_reference';
     }
 
     public function getDefinition(): FixerDefinitionInterface

@@ -31,7 +31,7 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/remove_doc_block_tags';
+        return 'VixFixer/remove_doc_block_tags';
     }
 
     public function getDefinition(): FixerDefinitionInterface

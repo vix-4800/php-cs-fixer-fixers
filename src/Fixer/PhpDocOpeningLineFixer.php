@@ -21,7 +21,7 @@ final class PhpDocOpeningLineFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/phpdoc_opening_line';
+        return 'VixFixer/phpdoc_opening_line';
     }
 
     public function getDefinition(): FixerDefinitionInterface

@@ -18,7 +18,7 @@ final class IssetCoalesceFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/isset_coalesce';
+        return 'VixFixer/isset_coalesce';
     }
 
     public function getDefinition(): FixerDefinitionInterface

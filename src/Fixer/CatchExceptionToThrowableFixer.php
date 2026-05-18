@@ -25,7 +25,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/catch_exception_to_throwable';
+        return 'VixFixer/catch_exception_to_throwable';
     }
 
     public function getDefinition(): FixerDefinitionInterface

@@ -38,7 +38,7 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/blank_line_after_statement';
+        return 'VixFixer/blank_line_after_statement';
     }
 
     public function getDefinition(): FixerDefinitionInterface

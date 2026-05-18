@@ -33,19 +33,19 @@ final class FixerSmokeTest extends TestCase
      */
     public static function fixerProvider(): iterable
     {
-        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'CustomFixer/blank_line_after_statement'];
-        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'CustomFixer/catch_exception_to_throwable'];
-        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'CustomFixer/fluent_chain_line_breaks'];
-        yield 'isset_coalesce' => [new IssetCoalesceFixer(), 'CustomFixer/isset_coalesce'];
-        yield 'no_yoda_comparison' => [new NoYodaComparisonFixer(), 'CustomFixer/no_yoda_comparison'];
-        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'CustomFixer/numeric_literal_separator'];
-        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'CustomFixer/phpdoc_opening_line'];
-        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'CustomFixer/phpdoc_self_reference'];
-        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'CustomFixer/phpdoc_separate_throws'];
-        yield 'remove_doc_block_tags' => [new RemoveDocBlockTagsFixer(), 'CustomFixer/remove_doc_block_tags'];
-        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'CustomFixer/remove_unused_catch_variable'];
-        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'CustomFixer/remove_unused_foreach_key'];
-        yield 'require_null_safe_operator' => [new RequireNullSafeOperatorFixer(), 'CustomFixer/require_null_safe_operator'];
+        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'VixFixer/blank_line_after_statement'];
+        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable'];
+        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks'];
+        yield 'isset_coalesce' => [new IssetCoalesceFixer(), 'VixFixer/isset_coalesce'];
+        yield 'no_yoda_comparison' => [new NoYodaComparisonFixer(), 'VixFixer/no_yoda_comparison'];
+        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator'];
+        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line'];
+        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference'];
+        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws'];
+        yield 'remove_doc_block_tags' => [new RemoveDocBlockTagsFixer(), 'VixFixer/remove_doc_block_tags'];
+        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable'];
+        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key'];
+        yield 'require_null_safe_operator' => [new RequireNullSafeOperatorFixer(), 'VixFixer/require_null_safe_operator'];
     }
 
     #[DataProvider('fixerProvider')]

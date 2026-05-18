@@ -20,7 +20,7 @@ final class RemoveUnusedCatchVariableFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/remove_unused_catch_variable';
+        return 'VixFixer/remove_unused_catch_variable';
     }
 
     public function getDefinition(): FixerDefinitionInterface

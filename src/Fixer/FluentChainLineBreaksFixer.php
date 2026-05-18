@@ -21,7 +21,7 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/fluent_chain_line_breaks';
+        return 'VixFixer/fluent_chain_line_breaks';
     }
 
     /**

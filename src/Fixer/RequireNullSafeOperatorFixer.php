@@ -18,7 +18,7 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/require_null_safe_operator';
+        return 'VixFixer/require_null_safe_operator';
     }
 
     public function getDefinition(): FixerDefinitionInterface

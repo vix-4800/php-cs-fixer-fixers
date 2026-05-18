@@ -35,7 +35,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/no_yoda_comparison';
+        return 'VixFixer/no_yoda_comparison';
     }
 
     public function getDefinition(): FixerDefinitionInterface

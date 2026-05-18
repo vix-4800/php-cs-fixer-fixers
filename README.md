@@ -26,26 +26,26 @@ return (new Config())
         new NoYodaComparisonFixer(),
     ])
     ->setRules([
-        'CustomFixer/no_yoda_comparison' => true,
+        'VixFixer/no_yoda_comparison' => true,
     ])
     ->setFinder($finder);
 ```
 
 ## Fixers
 
-- `CustomFixer/blank_line_after_statement`
-- `CustomFixer/catch_exception_to_throwable`
-- `CustomFixer/fluent_chain_line_breaks`
-- `CustomFixer/isset_coalesce`
-- `CustomFixer/no_yoda_comparison`
-- `CustomFixer/numeric_literal_separator`
-- `CustomFixer/phpdoc_opening_line`
-- `CustomFixer/phpdoc_self_reference`
-- `CustomFixer/phpdoc_separate_throws`
-- `CustomFixer/remove_doc_block_tags`
-- `CustomFixer/remove_unused_catch_variable`
-- `CustomFixer/remove_unused_foreach_key`
-- `CustomFixer/require_null_safe_operator`
+- `VixFixer/blank_line_after_statement`
+- `VixFixer/catch_exception_to_throwable`
+- `VixFixer/fluent_chain_line_breaks`
+- `VixFixer/isset_coalesce`
+- `VixFixer/no_yoda_comparison`
+- `VixFixer/numeric_literal_separator`
+- `VixFixer/phpdoc_opening_line`
+- `VixFixer/phpdoc_self_reference`
+- `VixFixer/phpdoc_separate_throws`
+- `VixFixer/remove_doc_block_tags`
+- `VixFixer/remove_unused_catch_variable`
+- `VixFixer/remove_unused_foreach_key`
+- `VixFixer/require_null_safe_operator`
 
 ## Development
 

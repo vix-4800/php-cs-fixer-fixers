@@ -20,7 +20,7 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/remove_unused_foreach_key';
+        return 'VixFixer/remove_unused_foreach_key';
     }
 
     public function getDefinition(): FixerDefinitionInterface

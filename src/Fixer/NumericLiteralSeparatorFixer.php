@@ -32,7 +32,7 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/numeric_literal_separator';
+        return 'VixFixer/numeric_literal_separator';
     }
 
     public function getDefinition(): FixerDefinitionInterface

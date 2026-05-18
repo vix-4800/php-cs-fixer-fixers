@@ -21,7 +21,7 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
     #[Override]
     public function getName(): string
     {
-        return 'CustomFixer/phpdoc_separate_throws';
+        return 'VixFixer/phpdoc_separate_throws';
     }
 
     public function getDefinition(): FixerDefinitionInterface
