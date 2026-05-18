@@ -109,6 +109,10 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
                 continue;
             }
 
+            if (preg_match('/^0[0-9]/', $content) === 1) {
+                continue;
+            }
+
             if (str_contains($content, '.')) {
                 $formatted = $this->formatFloat($content, $minDigits);
             } else {
