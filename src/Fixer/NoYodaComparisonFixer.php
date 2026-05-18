@@ -53,7 +53,17 @@ final class NoYodaComparisonFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound(self::COMPARISON_OPERATORS);
+        if ($tokens->isAnyTokenKindsFound(self::COMPARISON_OPERATORS)) {
+            return true;
+        }
+
+        foreach ($tokens as $token) {
+            if ($token->equalsAny(['<', '>'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #[Override]
@@ -67,7 +77,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
             $token = $tokens[$index];
 
-            if (!$token->isGivenKind(self::COMPARISON_OPERATORS)) {
+            if (!$token->isGivenKind(self::COMPARISON_OPERATORS) && !$token->equalsAny(['<', '>'])) {
                 continue;
             }
 
@@ -161,6 +171,20 @@ final class NoYodaComparisonFixer extends AbstractFixer
 
         if ($token->isGivenKind(T_VARIABLE)) {
             return $this->followVariableChain($tokens, $index);
+        }
+
+        if ($token->isGivenKind([
+            T_ARRAY_CAST,
+            T_BOOL_CAST,
+            T_DOUBLE_CAST,
+            T_INT_CAST,
+            T_OBJECT_CAST,
+            T_STRING_CAST,
+            T_UNSET_CAST,
+        ])) {
+            $next = $tokens->getNextMeaningfulToken($index);
+
+            return $next === null ? $index : $this->findExpressionEnd($tokens, $next);
         }
 
         if ($token->equals('(')) {
