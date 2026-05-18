@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Fixer;
 
+use const PHP_INT_MAX;
+
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Tokens;
-
-use const PHP_INT_MAX;
 
 final readonly class FluentChainCollector
 {
