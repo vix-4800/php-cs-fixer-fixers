@@ -36,7 +36,8 @@ final class IssetCoalesceFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAllTokenKindsFound([T_COALESCE, T_IS_IDENTICAL]);
+        return $tokens->isTokenKindFound(T_COALESCE)
+            && $tokens->isAnyTokenKindsFound([T_IS_IDENTICAL, T_IS_NOT_IDENTICAL]);
     }
 
     #[Override]
@@ -78,7 +79,11 @@ final class IssetCoalesceFixer extends AbstractFixer
 
         // Try pattern 2: null !== (... ?? null) or null === (... ?? null)
         if ($this->isNull($tokens, $leftEnd)) {
-            $this->tryReplaceCoalesceWithIsset($tokens, $operatorIndex, $rightStart, false);
+            $rightEnd = $tokens[$rightStart]->equals('(')
+                ? $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $rightStart)
+                : $rightStart;
+
+            $this->tryReplaceCoalesceWithIsset($tokens, $operatorIndex, $rightEnd, false);
 
             return;
         }
