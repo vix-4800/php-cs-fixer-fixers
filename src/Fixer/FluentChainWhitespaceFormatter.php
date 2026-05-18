@@ -17,8 +17,9 @@ final readonly class FluentChainWhitespaceFormatter
     public function __construct(
         private Tokens $tokens,
         private string $lineBreak,
-        private string $indent,
+        string $indent,
     ) {
+        unset($indent);
     }
 
     /**

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Fixer;
 
+use const PHP_INT_MAX;
+
 use PhpCsFixer\Tokenizer\Tokens;
 
 final readonly class FluentChainCollector
@@ -13,8 +15,7 @@ final readonly class FluentChainCollector
      */
     public function __construct(
         private Tokens $tokens,
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<array{start: int, end: int, calls: list<array{operator: int, open: int, close: int}>}>
@@ -178,7 +179,14 @@ final readonly class FluentChainCollector
             return false;
         }
 
-        $blockEnd = $this->tokens->findBlockEnd($blockType, $index);
+        $blockEnd = match ($blockType) {
+            Tokens::BLOCK_TYPE_ARRAY_INDEX_CURLY_BRACE,
+            Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE,
+            Tokens::BLOCK_TYPE_CURLY_BRACE,
+            Tokens::BLOCK_TYPE_INDEX_SQUARE_BRACE,
+            Tokens::BLOCK_TYPE_PARENTHESIS_BRACE => $this->tokens->findBlockEnd($blockType, $index),
+            default => PHP_INT_MAX,
+        };
 
         return $blockEnd > $startIndex && $this->blockContainsNewline($index, $blockEnd);
     }

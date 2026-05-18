@@ -20,10 +20,12 @@ use SplFileInfo;
 
 /**
  * Removes configurable unwanted tags from PHPDoc blocks.
+ *
+ * @implements ConfigurableFixerInterface<array{tags?: list<string>}, array{tags: list<string>}>
  */
 final class RemoveDocBlockTagsFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    /** @use ConfigurableFixerTrait<array{tags: list<string>}, array{tags: list<string>}> */
+    /** @use ConfigurableFixerTrait<array{tags?: list<string>}, array{tags: list<string>}> */
     use ConfigurableFixerTrait;
 
     #[Override]
@@ -86,14 +88,16 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
 
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
-        $tags = $this->configuration['tags'];
+        $configuration = $this->configuration ?? $this->getConfigurationDefinition()->resolve([]);
+        /** @var array{tags: list<string>} $configuration */
+        $tags = $configuration['tags'];
 
         if ($tags === []) {
             return;
         }
 
         $tagPattern = implode('|', array_map(
-            static fn (string $tag): string => preg_quote($tag, '/'),
+            static fn(string $tag): string => preg_quote($tag, '/'),
             $tags
         ));
 

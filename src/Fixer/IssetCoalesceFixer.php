@@ -155,6 +155,9 @@ final class IssetCoalesceFixer extends AbstractFixer
         return null;
     }
 
+    /**
+     * @return array{coalesce_index: int, expr_start: int, expr_end: int, fallback_start: int}|null
+     */
     private function parseCoalesceExpression(Tokens $tokens, int $start, int $end): ?array
     {
         $coalesceIndex = null;
@@ -318,10 +321,20 @@ final class IssetCoalesceFixer extends AbstractFixer
         if ($isLeftOperand) {
             // Replace from parenStart to end of null operand
             $nullIndex = $tokens->getNextMeaningfulToken($operatorIndex);
+
+            if ($nullIndex === null) {
+                return;
+            }
+
             $replacementEnd = $nullIndex;
         } else {
             // Replace from start of null operand to parenEnd
             $nullIndex = $tokens->getPrevMeaningfulToken($operatorIndex);
+
+            if ($nullIndex === null) {
+                return;
+            }
+
             $replacementEnd = $parenEnd;
             $parenStart = $nullIndex;
         }

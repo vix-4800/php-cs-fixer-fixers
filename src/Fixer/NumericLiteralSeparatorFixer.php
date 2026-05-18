@@ -17,9 +17,17 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
 
+/**
+ * @implements ConfigurableFixerInterface<array{min_digits?: int}, array{min_digits: int}>
+ */
 final class NumericLiteralSeparatorFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
-    protected array $configuration = [];
+    /**
+     * @var array{min_digits: int}
+     */
+    protected array $configuration = [
+        'min_digits' => 5,
+    ];
 
     #[Override]
     public function getName(): string
@@ -55,6 +63,7 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
             $configuration = $this->getConfigurationDefinition()->resolve([]);
         }
 
+        /** @var array{min_digits: int} $configuration */
         $this->configuration = $configuration;
     }
 

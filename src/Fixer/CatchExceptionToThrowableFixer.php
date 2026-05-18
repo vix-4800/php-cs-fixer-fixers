@@ -34,7 +34,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             'Replaces Exception with Throwable in catch blocks, including imported aliases to Exception.',
             [
                 new CodeSample(
-                    "<?php\nuse Exception as E;\n\ntry {\n    doWork();\n} catch (Exception|E {$e}) {\n    report({$e});\n}\n"
+                    "<?php\nuse Exception as E;\n\ntry {\n    doWork();\n} catch (Exception|E \$e) {\n    report(\$e);\n}\n"
                 ),
             ],
             'Prefers Throwable catches instead of Exception for broader and consistent handling.'

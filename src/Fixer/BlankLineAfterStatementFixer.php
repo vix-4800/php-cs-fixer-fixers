@@ -18,13 +18,21 @@ use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
 
+/**
+ * @implements ConfigurableFixerInterface<array{statements?: list<string>}, array{statements: list<string>}>
+ */
 final class BlankLineAfterStatementFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
     /**
-     * @var array<string, mixed>
+     * @var array{statements: list<string>}
      */
-    protected array $configuration = [];
+    protected array $configuration = [
+        'statements' => [],
+    ];
 
+    /**
+     * @var list<int>
+     */
     private array $tokenKinds = [];
 
     #[Override]
@@ -57,6 +65,7 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
             $configuration = $this->getConfigurationDefinition()->resolve([]);
         }
 
+        /** @var array{statements: list<string>} $configuration */
         $this->configuration = $configuration;
 
         $this->tokenKinds = $this->transformStatementsToTokenKinds($this->configuration['statements']);
@@ -79,7 +88,11 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
             (new FixerOptionBuilder('statements', 'List of statements that should be followed by a blank line.'))
                 ->setAllowedTypes(['array'])
                 ->setAllowedValues([
-                    static function (array $value): bool {
+                    static function (mixed $value): bool {
+                        if (!is_array($value)) {
+                            return false;
+                        }
+
                         foreach ($value as $statement) {
                             if (!is_string($statement)) {
                                 return false;
@@ -143,6 +156,11 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
             }
 
             $openParenthesis = $tokens->getNextMeaningfulToken($whileIndex);
+
+            if ($openParenthesis === null) {
+                return $blockEnd;
+            }
+
             $closeParenthesis = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $openParenthesis);
 
             return $tokens->getNextTokenOfKind($closeParenthesis, [';']);
@@ -231,10 +249,16 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         }
     }
 
+    /**
+     * @param list<string> $statements
+     *
+     * @return list<int>
+     */
     private function transformStatementsToTokenKinds(array $statements): array
     {
         $tokenKinds = [];
 
+        /** @var array<string, int> $map */
         $map = [
             'break' => T_BREAK,
             'continue' => T_CONTINUE,

@@ -100,10 +100,6 @@ final class NoYodaComparisonFixer extends AbstractFixer
         $leftStartIndex = $this->findExpressionStart($tokens, $leftEnd);
         $rightEndIndex = $this->findExpressionEnd($tokens, $rightStart);
 
-        if ($leftStartIndex === null || $rightEndIndex === null) {
-            return;
-        }
-
         $leftTokens = $this->extractTokens($tokens, $leftStartIndex, $leftEnd);
         $rightTokens = $this->extractTokens($tokens, $rightStart, $rightEndIndex);
 
@@ -128,15 +124,16 @@ final class NoYodaComparisonFixer extends AbstractFixer
 
         if ($token->isGivenKind(CT::T_ARRAY_SQUARE_BRACE_CLOSE)) {
             $openBrace = $tokens->findBlockStart(Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE, $index);
+            $previousMeaningful = $tokens->getPrevMeaningfulToken($openBrace);
 
-            return $tokens->getPrevMeaningfulToken($openBrace) !== null
-                && !$tokens[$tokens->getPrevMeaningfulToken($openBrace)]->isGivenKind(T_VARIABLE);
+            return $previousMeaningful !== null
+                && !$tokens[$previousMeaningful]->isGivenKind(T_VARIABLE);
         }
 
         return false;
     }
 
-    private function findExpressionStart(Tokens $tokens, int $index): ?int
+    private function findExpressionStart(Tokens $tokens, int $index): int
     {
         $token = $tokens[$index];
 
@@ -158,7 +155,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
         return $index;
     }
 
-    private function findExpressionEnd(Tokens $tokens, int $index): ?int
+    private function findExpressionEnd(Tokens $tokens, int $index): int
     {
         $token = $tokens[$index];
 
@@ -365,6 +362,9 @@ final class NoYodaComparisonFixer extends AbstractFixer
         return $current;
     }
 
+    /**
+     * @return list<Token>
+     */
     private function extractTokens(Tokens $tokens, int $start, int $end): array
     {
         $extracted = [];
@@ -383,8 +383,10 @@ final class NoYodaComparisonFixer extends AbstractFixer
             T_IS_GREATER_OR_EQUAL => new Token([T_IS_SMALLER_OR_EQUAL, '<=']),
         ];
 
-        if (isset($flipped[$token->getId()])) {
-            return $flipped[$token->getId()];
+        $tokenId = $token->getId();
+
+        if ($tokenId !== null && isset($flipped[$tokenId])) {
+            return $flipped[$tokenId];
         }
 
         if ($token->equals('<')) {
@@ -398,6 +400,10 @@ final class NoYodaComparisonFixer extends AbstractFixer
         return clone $token;
     }
 
+    /**
+     * @param list<Token> $newLeftTokens
+     * @param list<Token> $newRightTokens
+     */
     private function replaceTokens(
         Tokens $tokens,
         int $start,
@@ -406,6 +412,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
         Token $operator,
         array $newRightTokens
     ): void {
+        /** @var list<Token> $insertTokens */
         $insertTokens = [];
 
         foreach ($newLeftTokens as $token) {
