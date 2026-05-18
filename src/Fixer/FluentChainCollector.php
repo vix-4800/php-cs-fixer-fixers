@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Fixer;
 
-use const PHP_INT_MAX;
-
+use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Tokens;
+
+use const PHP_INT_MAX;
 
 final readonly class FluentChainCollector
 {
@@ -150,7 +151,7 @@ final readonly class FluentChainCollector
             return true;
         }
 
-        if ($this->tokens[$index]->equals(']')) {
+        if ($this->tokens[$index]->equals(']') || $this->tokens[$index]->isGivenKind(CT::T_ARRAY_SQUARE_BRACE_CLOSE)) {
             ++$squareDepth;
 
             return true;
@@ -169,7 +170,10 @@ final readonly class FluentChainCollector
         int &$depth,
         int $blockType,
     ): bool {
-        if (!$this->tokens[$index]->equals($openingToken)) {
+        if (
+            !$this->tokens[$index]->equals($openingToken)
+            && !($openingToken === '[' && $this->tokens[$index]->isGivenKind(CT::T_ARRAY_SQUARE_BRACE_OPEN))
+        ) {
             return false;
         }
 
