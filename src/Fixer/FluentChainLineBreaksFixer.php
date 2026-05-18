@@ -6,15 +6,30 @@ namespace Vix\PhpCsFixerFixers\Fixer;
 
 use Override;
 use PhpCsFixer\AbstractFixer;
+use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
+use PhpCsFixer\FixerConfiguration\FixerConfigurationResolver;
+use PhpCsFixer\FixerConfiguration\FixerConfigurationResolverInterface;
+use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
 
-final class FluentChainLineBreaksFixer extends AbstractFixer implements WhitespacesAwareFixerInterface
+/**
+ * @implements ConfigurableFixerInterface<array{break_on_first_call?: bool, min_chain_calls?: null|int}, array{break_on_first_call: bool, min_chain_calls: null|int}>
+ */
+final class FluentChainLineBreaksFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
+    /**
+     * @var array{break_on_first_call: bool, min_chain_calls: null|int}
+     */
+    protected array $configuration = [
+        'break_on_first_call' => false,
+        'min_chain_calls' => null,
+    ];
+
     /**
      * Returns fixer name used in php-cs-fixer config.
      */
@@ -50,6 +65,22 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
     }
 
     /**
+     * @param array{break_on_first_call?: bool, min_chain_calls?: null|int} $configuration
+     */
+    public function configure(array $configuration): void
+    {
+        /** @var array{break_on_first_call: bool, min_chain_calls: null|int} $configuration */
+        $configuration = $this->getConfigurationDefinition()->resolve($configuration);
+
+        $this->configuration = $configuration;
+    }
+
+    public function getConfigurationDefinition(): FixerConfigurationResolverInterface
+    {
+        return $this->createConfigurationDefinition();
+    }
+
+    /**
      * Runs before built-in whitespace fixers so they can polish the final layout.
      */
     #[Override]
@@ -69,6 +100,8 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
             $this->whitespacesConfig->getLineEnding(),
             $this->whitespacesConfig->getIndent()
         );
+        $breakOnFirstCall = $this->configuration['break_on_first_call'];
+        $minChainCalls = $this->configuration['min_chain_calls'];
 
         do {
             $chains = $collector->collectChains();
@@ -81,6 +114,10 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
                     continue;
                 }
 
+                if ($minChainCalls !== null && count($chain['calls']) < $minChainCalls) {
+                    continue;
+                }
+
                 $targetWhitespace = $collector->detectChainIndentation($chain['start'])
                     . $this->whitespacesConfig->getIndent();
 
@@ -88,7 +125,10 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
                     $call = $chain['calls'][$callIndex];
 
                     $hasChanges = $formatter->compactArgumentsIfPossible($call['open'], $call['close']) || $hasChanges;
-                    $hasChanges = $formatter->ensureLineBreakBeforeOperator($call['operator'], $targetWhitespace) || $hasChanges;
+
+                    if ($breakOnFirstCall || $callIndex > 0) {
+                        $hasChanges = $formatter->ensureLineBreakBeforeOperator($call['operator'], $targetWhitespace) || $hasChanges;
+                    }
                 }
 
                 if ($hasChanges) {
@@ -96,5 +136,22 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Whitespa
                 }
             }
         } while ($hasChanges);
+    }
+
+    private function createConfigurationDefinition(): FixerConfigurationResolverInterface
+    {
+        return new FixerConfigurationResolver([
+            (new FixerOptionBuilder('break_on_first_call', 'Whether the first chained method call should start on a new line.'))
+                ->setAllowedTypes(['bool'])
+                ->setDefault(false)
+                ->getOption(),
+            (new FixerOptionBuilder('min_chain_calls', 'Minimum number of chained method calls required before formatting. Null disables the limit.'))
+                ->setAllowedTypes(['null', 'int'])
+                ->setAllowedValues([
+                    static fn(mixed $value): bool => $value === null || (is_int($value) && $value > 0),
+                ])
+                ->setDefault(null)
+                ->getOption(),
+        ]);
     }
 }
