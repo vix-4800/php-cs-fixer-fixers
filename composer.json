@@ -1,0 +1,49 @@
+{
+  "name": "vix/php-cs-fixer-fixers",
+  "description": "Custom PHP-CS-Fixer fixers for strict development standards",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Anton Vix",
+      "email": "Gordan.ei@protonmail.ch"
+    }
+  ],
+  "keywords": [
+    "dev",
+    "php-cs-fixer",
+    "fixer",
+    "coding-standards",
+    "static-analysis"
+  ],
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.3",
+    "friendsofphp/php-cs-fixer": "^3.94.2"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1.54",
+    "phpunit/phpunit": "^12.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vix\\PhpCsFixerFixers\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Vix\\PhpCsFixerFixers\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "php -d memory_limit=1G vendor/bin/phpunit --colors=always",
+    "static-analysis": "vendor/bin/phpstan analyse --memory-limit=1G --debug",
+    "cs-fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --sequential --allow-unsupported-php-version=yes",
+    "cs-fix-dry": "@cs-fix --dry-run --diff",
+    "check": [
+      "@cs-fix-dry",
+      "@static-analysis",
+      "@test"
+    ]
+  }
+}
