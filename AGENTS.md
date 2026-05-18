@@ -8,7 +8,7 @@
 ## Project Shape
 
 - This repository is a PHP library of custom PHP-CS-Fixer fixers.
-- Target runtime is PHP 8.3+; CI currently runs on PHP 8.4.
+- Target runtime is PHP 8.4+; CI currently runs on PHP 8.4.
 - Production code lives in `src/`. Fixer tests live in `tests/`.
 - `src/Fixers.php` is the registry for all custom fixers.
 - `tests/FixerSmokeTest.php` verifies fixer registration and rule-name wiring.
