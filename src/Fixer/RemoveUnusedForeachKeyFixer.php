@@ -9,6 +9,7 @@ use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
 
@@ -152,5 +153,7 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         if (isset($tokens[$doubleArrowIndex + 1]) && $tokens[$doubleArrowIndex + 1]->isWhitespace()) {
             $tokens->clearAt($doubleArrowIndex + 1);
         }
+
+        $tokens->insertAt($asIndex + 1, new Token([T_WHITESPACE, ' ']));
     }
 }
