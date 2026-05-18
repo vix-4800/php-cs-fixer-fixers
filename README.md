@@ -42,19 +42,7 @@ return (new Config())
 
 ## Fixers
 
-- `VixFixer/blank_line_after_statement`
-- `VixFixer/catch_exception_to_throwable`
-- `VixFixer/fluent_chain_line_breaks`
-- `VixFixer/isset_coalesce`
-- `VixFixer/no_yoda_comparison`
-- `VixFixer/numeric_literal_separator`
-- `VixFixer/phpdoc_opening_line`
-- `VixFixer/phpdoc_self_reference`
-- `VixFixer/phpdoc_separate_throws`
-- `VixFixer/remove_doc_block_tags`
-- `VixFixer/remove_unused_catch_variable`
-- `VixFixer/remove_unused_foreach_key`
-- `VixFixer/require_null_safe_operator`
+See [docs/FIXERS.md](docs/FIXERS.md) for detailed descriptions, configuration parameters, and before/after examples for every fixer.
 
 ## Development
 
