@@ -2,6 +2,11 @@
 
 Custom PHP-CS-Fixer fixers for strict development standards.
 
+[![Tests](https://github.com/vix-4800/phpcs-sniffs/actions/workflows/tests.yml/badge.svg)](https://github.com/vix-4800/phpcs-sniffs/actions/workflows/tests.yml)
+[![PHPStan](https://github.com/vix-4800/phpcs-sniffs/actions/workflows/phpstan.yml/badge.svg)](https://github.com/vix-4800/phpcs-sniffs/actions/workflows/phpstan.yml)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.4-blue)](https://www.php.net/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Installation
 
 ```bash
