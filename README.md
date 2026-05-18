@@ -7,6 +7,12 @@ Custom PHP-CS-Fixer fixers for strict development standards.
 [![PHP Version](https://img.shields.io/badge/php-%5E8.4-blue)](https://www.php.net/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+- [PHP-CS-Fixer Fixers](#php-cs-fixer-fixers)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Fixers](#fixers)
+  - [Development](#development)
+
 ## Installation
 
 ```bash
