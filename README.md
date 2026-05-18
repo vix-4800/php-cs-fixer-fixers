@@ -11,7 +11,6 @@ Custom PHP-CS-Fixer fixers for strict development standards.
   - [Installation](#installation)
   - [Usage](#usage)
   - [Fixers](#fixers)
-  - [Development](#development)
 
 ## Installation
 
@@ -43,10 +42,3 @@ return (new Config())
 ## Fixers
 
 See [docs/FIXERS.md](docs/FIXERS.md) for detailed descriptions, configuration parameters, and before/after examples for every fixer.
-
-## Development
-
-```bash
-composer install
-composer check
-```

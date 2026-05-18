@@ -18,7 +18,6 @@
 - Install dependencies with `composer install`.
 - Use `composer test` for PHPUnit.
 - Use `composer static-analysis` for PHPStan.
-- Use `composer check` when a change affects runtime behavior, public API, or fixer output.
 
 ## Conventions
 
