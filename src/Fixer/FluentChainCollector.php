@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CustomFixer;
+namespace Vix\PhpCsFixerFixers\Fixer;
 
 use PhpCsFixer\Tokenizer\Tokens;
 
