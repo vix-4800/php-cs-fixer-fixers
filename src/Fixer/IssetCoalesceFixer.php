@@ -27,10 +27,10 @@ final class IssetCoalesceFixer extends AbstractFixer
             'Simplifies null coalescing comparisons to isset/!isset when semantically equivalent.',
             [
                 new CodeSample(
-                    "<?php\nif ((\$chat['poll'] ?? null) !== null) {}\nif (null === (\$value ?? null)) {}\n"
+                    "<?php\nif ((\$chat['poll'] ?? null) !== null) {}\nif (null === (\$value ?? null)) {}\n",
                 ),
             ],
-            'Transforms (... ?? null) !== null to isset(...) and (... ?? null) === null to !isset(...) for cleaner code.'
+            'Transforms (... ?? null) !== null to isset(...) and (... ?? null) === null to !isset(...) for cleaner code.',
         );
     }
 
@@ -93,7 +93,7 @@ final class IssetCoalesceFixer extends AbstractFixer
         Tokens $tokens,
         int $operatorIndex,
         int $coalesceEndIndex,
-        bool $isLeftOperand
+        bool $isLeftOperand,
     ): void {
         // Check if the operand ends with closing parenthesis
         if (!$tokens[$coalesceEndIndex]->equals(')')) {
@@ -126,7 +126,8 @@ final class IssetCoalesceFixer extends AbstractFixer
 
         // Determine if we need negation
         $operator = $tokens[$operatorIndex];
-        $needsNegation = $operator->isGivenKind(T_IS_IDENTICAL); // === null means !isset
+        // === null means !isset
+        $needsNegation = $operator->isGivenKind(T_IS_IDENTICAL);
 
         // Build replacement
         $this->buildIssetReplacement(
@@ -137,7 +138,7 @@ final class IssetCoalesceFixer extends AbstractFixer
             $coalesceInfo['expr_start'],
             $coalesceInfo['expr_end'],
             $needsNegation,
-            $isLeftOperand
+            $isLeftOperand,
         );
     }
 
@@ -161,6 +162,10 @@ final class IssetCoalesceFixer extends AbstractFixer
     }
 
     /**
+     * @param Tokens $tokens
+     * @param int    $start
+     * @param int    $end
+     *
      * @return array{coalesce_index: int, expr_start: int, expr_end: int, fallback_start: int}|null
      */
     private function parseCoalesceExpression(Tokens $tokens, int $start, int $end): ?array
@@ -223,9 +228,11 @@ final class IssetCoalesceFixer extends AbstractFixer
         $meaningfulTokens = [];
 
         for ($i = $start; $i <= $end; ++$i) {
-            if (!$tokens[$i]->isWhitespace() && !$tokens[$i]->isComment()) {
-                $meaningfulTokens[] = $i;
+            if ($tokens[$i]->isWhitespace() || $tokens[$i]->isComment()) {
+                continue;
             }
+
+            $meaningfulTokens[] = $i;
         }
 
         if ($meaningfulTokens === []) {
@@ -242,11 +249,16 @@ final class IssetCoalesceFixer extends AbstractFixer
         // Check remaining tokens - only allow safe isset constructs
         $allowedKinds = [
             T_VARIABLE,
-            T_OBJECT_OPERATOR,      // ->
-            T_NULLSAFE_OBJECT_OPERATOR, // ?->
-            T_DOUBLE_COLON,         // ::
-            T_STRING,               // property/method names
-            '[',                    // array access
+            // ->
+            T_OBJECT_OPERATOR,
+            // ?->
+            T_NULLSAFE_OBJECT_OPERATOR,
+            // ::
+            T_DOUBLE_COLON,
+            // property/method names
+            T_STRING,
+            // array access
+            '[',
             ']',
         ];
 
@@ -281,12 +293,14 @@ final class IssetCoalesceFixer extends AbstractFixer
             }
 
             // Disallow function calls (string followed by opening parenthesis)
-            if ($token->isGivenKind(T_STRING)) {
-                $nextMeaningful = $tokens->getNextMeaningfulToken($tokenIndex);
+            if (!$token->isGivenKind(T_STRING)) {
+                continue;
+            }
 
-                if ($nextMeaningful !== null && $tokens[$nextMeaningful]->equals('(')) {
-                    return false;
-                }
+            $nextMeaningful = $tokens->getNextMeaningfulToken($tokenIndex);
+
+            if ($nextMeaningful !== null && $tokens[$nextMeaningful]->equals('(')) {
+                return false;
             }
         }
 
@@ -301,7 +315,7 @@ final class IssetCoalesceFixer extends AbstractFixer
         int $exprStart,
         int $exprEnd,
         bool $needsNegation,
-        bool $isLeftOperand
+        bool $isLeftOperand,
     ): void {
         // Extract the expression tokens
         $exprTokens = [];

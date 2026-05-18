@@ -27,10 +27,10 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
             'Converts ternary null checks to the null-safe operator ?->.',
             [
                 new CodeSample(
-                    "<?php\n\$name = \$user !== null ? \$user->getName() : null;\n\$city = \$user !== null ? \$user->getAddress()->getCity() : null;\n"
+                    "<?php\n\$name = \$user !== null ? \$user->getName() : null;\n\$city = \$user !== null ? \$user->getAddress()->getCity() : null;\n",
                 ),
             ],
-            'Transforms $x !== null ? $x->method() : null (and != null) into $x?->method() for cleaner PHP 8+ code.'
+            'Transforms $x !== null ? $x->method() : null (and != null) into $x?->method() for cleaner PHP 8+ code.',
         );
     }
 
@@ -161,7 +161,7 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
         int $objectOpIndex,
         int $colonIndex,
         int $falseBranchEnd,
-        string $varName
+        string $varName,
     ): void {
         // Collect the method chain tokens (everything after -> up to but not including the colon,
         // preserving inner content but stripping trailing whitespace)
@@ -232,13 +232,15 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
                 continue;
             }
 
-            if ($token->equals(':')) {
-                if ($ternaryDepth === 0) {
-                    return $i;
-                }
-
-                --$ternaryDepth;
+            if (!$token->equals(':')) {
+                continue;
             }
+
+            if ($ternaryDepth === 0) {
+                return $i;
+            }
+
+            --$ternaryDepth;
         }
 
         return null;

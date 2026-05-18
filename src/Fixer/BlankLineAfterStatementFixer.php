@@ -47,10 +47,10 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
             'An empty line feed must follow control structures.',
             [
                 new CodeSample(
-                    "<?php\nif (\$condition) {\n    echo 'foo';\n}\n\$bar = 'baz';\n"
+                    "<?php\nif (\$condition) {\n    echo 'foo';\n}\n\$bar = 'baz';\n",
                 ),
             ],
-            'Adds blank lines after specified control structures for better readability.'
+            'Adds blank lines after specified control structures for better readability.',
         );
     }
 
@@ -85,7 +85,7 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
     private function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
-            (new FixerOptionBuilder('statements', 'List of statements that should be followed by a blank line.'))
+            new FixerOptionBuilder('statements', 'List of statements that should be followed by a blank line.')
                 ->setAllowedTypes(['array'])
                 ->setAllowedValues([
                     static function (mixed $value): bool {
@@ -93,13 +93,7 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
                             return false;
                         }
 
-                        foreach ($value as $statement) {
-                            if (!is_string($statement)) {
-                                return false;
-                            }
-                        }
-
-                        return true;
+                        return array_all($value, static fn($statement): mixed => is_string($statement));
                     },
                 ])
                 ->setDefault([
@@ -232,20 +226,22 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
 
         $newlineCount = mb_substr_count($whitespace, "\n");
 
-        if ($newlineCount < 2) {
-            $newWhitespace = $this->whitespacesConfig->getLineEnding();
+        if ($newlineCount >= 2) {
+            return;
+        }
 
-            if ($newlineCount === 1) {
-                $newWhitespace .= $whitespace;
-            } elseif ($newlineCount === 0) {
-                $newWhitespace .= $this->whitespacesConfig->getLineEnding() . $whitespace;
-            }
+        $newWhitespace = $this->whitespacesConfig->getLineEnding();
 
-            if ($nextToken->isWhitespace()) {
-                $tokens[$nextIndex] = new Token([T_WHITESPACE, $newWhitespace]);
-            } else {
-                $tokens->insertAt($nextIndex, new Token([T_WHITESPACE, $newWhitespace]));
-            }
+        if ($newlineCount === 1) {
+            $newWhitespace .= $whitespace;
+        } elseif ($newlineCount === 0) {
+            $newWhitespace .= $this->whitespacesConfig->getLineEnding() . $whitespace;
+        }
+
+        if ($nextToken->isWhitespace()) {
+            $tokens[$nextIndex] = new Token([T_WHITESPACE, $newWhitespace]);
+        } else {
+            $tokens->insertAt($nextIndex, new Token([T_WHITESPACE, $newWhitespace]));
         }
     }
 
@@ -276,9 +272,11 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         ];
 
         foreach ($statements as $statement) {
-            if (isset($map[$statement])) {
-                $tokenKinds[] = $map[$statement];
+            if (!isset($map[$statement])) {
+                continue;
             }
+
+            $tokenKinds[] = $map[$statement];
         }
 
         return $tokenKinds;

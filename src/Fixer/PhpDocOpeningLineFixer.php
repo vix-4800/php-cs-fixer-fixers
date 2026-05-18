@@ -30,11 +30,11 @@ final class PhpDocOpeningLineFixer extends AbstractFixer
             'Multi-line PHPDoc comments must have `/**` on its own line.',
             [
                 new CodeSample(
-                    "<?php\n/** Hello\n * World!\n */\nfunction foo(): void {}\n"
+                    "<?php\n/** Hello\n * World!\n */\nfunction foo(): void {}\n",
                 ),
             ],
             'When a PHPDoc block spans multiple lines, the opening `/**` must be on its own line. '
-                . 'Single-line `/** ... */` blocks are not affected.'
+                . 'Single-line `/** ... */` blocks are not affected.',
         );
     }
 
@@ -59,9 +59,11 @@ final class PhpDocOpeningLineFixer extends AbstractFixer
 
             $fixed = $this->fixDocComment($token->getContent());
 
-            if ($fixed !== $token->getContent()) {
-                $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
+            if ($fixed === $token->getContent()) {
+                continue;
             }
+
+            $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
         }
     }
 

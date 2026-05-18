@@ -35,10 +35,10 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
             'Inside a class, replaces the class name with `self` in PHPDoc type annotations.',
             [
                 new CodeSample(
-                    "<?php\nclass Foo {\n    /** @var Foo */\n    private Foo \$instance;\n}\n"
+                    "<?php\nclass Foo {\n    /** @var Foo */\n    private Foo \$instance;\n}\n",
                 ),
             ],
-            'Only unqualified short names are replaced. FQCNs (\Foo\Bar) are kept as-is.'
+            'Only unqualified short names are replaced. FQCNs (\Foo\Bar) are kept as-is.',
         );
     }
 
@@ -58,7 +58,8 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
     {
         // Build a map of: doc-comment token index → class short name
         // by tracking class context as we walk the token stream.
-        $classStack = []; // stack of ['name' => string, 'braceDepth' => int]
+        // stack of ['name' => string, 'braceDepth' => int]
+        $classStack = [];
         $braceDepth = 0;
 
         for ($i = 0, $count = $tokens->count(); $i < $count; ++$i) {
@@ -88,7 +89,8 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
                 if ($nameIndex !== null && $tokens[$nameIndex]->isGivenKind(T_STRING)) {
                     $classStack[] = [
                         'name' => $tokens[$nameIndex]->getContent(),
-                        'braceDepth' => $braceDepth, // depth at which the '{' will settle
+                        // depth at which the '{' will settle
+                        'braceDepth' => $braceDepth,
                     ];
                 }
 
@@ -107,9 +109,11 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
             $className = end($classStack)['name'];
             $fixed = $this->replaceClassNameInDocComment($token->getContent(), $className);
 
-            if ($fixed !== $token->getContent()) {
-                $tokens[$i] = new Token([T_DOC_COMMENT, $fixed]);
+            if ($fixed === $token->getContent()) {
+                continue;
             }
+
+            $tokens[$i] = new Token([T_DOC_COMMENT, $fixed]);
         }
     }
 
@@ -131,12 +135,12 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
                 $replaced = preg_replace(
                     '/(?<![\\\\\w])' . preg_quote($className, '/') . '(?![\w\\\])/i',
                     'self',
-                    $type
+                    $type,
                 );
 
                 return $tag . ' ' . $replaced;
             },
-            $docComment
+            $docComment,
         ) ?? $docComment;
     }
 }

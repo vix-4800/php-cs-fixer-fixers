@@ -15,7 +15,7 @@ final readonly class FluentChainCollector
      * @param Tokens $tokens Token stream being analyzed.
      */
     public function __construct(
-        private Tokens $tokens,
+        private Tokens $tokens
     ) {}
 
     /**
@@ -27,7 +27,11 @@ final readonly class FluentChainCollector
         $processedOperators = [];
 
         for ($index = 0, $count = $this->tokens->count(); $index < $count; ++$index) {
-            if (array_key_exists($index, $processedOperators) || !$this->isMethodCallOperator($index)) {
+            if (array_key_exists($index, $processedOperators)) {
+                continue;
+            }
+
+            if (!$this->isMethodCallOperator($index)) {
                 continue;
             }
 
@@ -45,16 +49,28 @@ final readonly class FluentChainCollector
 
     /**
      * Checks whether the collected chain already spans multiple lines.
+     *
+     * @param int $startIndex
+     * @param int $endIndex
      */
     public function shouldFormatChain(int $startIndex, int $endIndex): bool
     {
-        return $this->chainContainsNewline($startIndex, $endIndex)
-            || $this->hasLeadingLineBreak($startIndex)
-            || $this->isInsideMultilineStructure($startIndex);
+        if ($this->chainContainsNewline($startIndex, $endIndex)) {
+            return true;
+        }
+
+        if ($this->hasLeadingLineBreak($startIndex)) {
+            return true;
+        }
+
+        return $this->isInsideMultilineStructure($startIndex);
     }
 
     /**
      * Checks whether the collected chain already spans multiple lines.
+     *
+     * @param int $startIndex
+     * @param int $endIndex
      */
     private function chainContainsNewline(int $startIndex, int $endIndex): bool
     {
@@ -73,6 +89,8 @@ final readonly class FluentChainCollector
 
     /**
      * Detects chains that already begin on a continuation line.
+     *
+     * @param int $startIndex
      */
     private function hasLeadingLineBreak(int $startIndex): bool
     {
@@ -87,6 +105,8 @@ final readonly class FluentChainCollector
 
     /**
      * Returns indentation of the line that owns the chain root expression.
+     *
+     * @param int $startIndex
      */
     public function detectChainIndentation(int $startIndex): string
     {
@@ -101,6 +121,8 @@ final readonly class FluentChainCollector
 
     /**
      * Detects chains nested inside a multiline wrapper such as arrays or argument lists.
+     *
+     * @param int $startIndex
      */
     private function isInsideMultilineStructure(int $startIndex): bool
     {
@@ -112,23 +134,11 @@ final readonly class FluentChainCollector
                 continue;
             }
 
-            if ($this->isOpeningMultilineBlock(
-                $startIndex,
-                $index,
-                '(',
-                $parenthesisDepth,
-                Tokens::BLOCK_TYPE_PARENTHESIS_BRACE,
-            )) {
+            if ($this->isOpeningMultilineBlock($startIndex, $index, '(', $parenthesisDepth, Tokens::BLOCK_TYPE_PARENTHESIS_BRACE)) {
                 return true;
             }
 
-            if ($this->isOpeningMultilineBlock(
-                $startIndex,
-                $index,
-                '[',
-                $squareDepth,
-                Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE,
-            )) {
+            if ($this->isOpeningMultilineBlock($startIndex, $index, '[', $squareDepth, Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE)) {
                 return true;
             }
 
@@ -142,6 +152,10 @@ final readonly class FluentChainCollector
 
     /**
      * Tracks nested closing blocks while scanning backwards.
+     *
+     * @param int $index
+     * @param int $parenthesisDepth
+     * @param int $squareDepth
      */
     private function registerClosingBlock(int $index, int &$parenthesisDepth, int &$squareDepth): bool
     {
@@ -162,6 +176,12 @@ final readonly class FluentChainCollector
 
     /**
      * Checks whether the current opening token encloses the chain inside a multiline wrapper.
+     *
+     * @param int    $startIndex
+     * @param int    $index
+     * @param string $openingToken
+     * @param int    $depth
+     * @param int    $blockType
      */
     private function isOpeningMultilineBlock(
         int $startIndex,
@@ -197,6 +217,10 @@ final readonly class FluentChainCollector
 
     /**
      * Stops searching once the scan leaves the local statement scope.
+     *
+     * @param int $index
+     * @param int $parenthesisDepth
+     * @param int $squareDepth
      */
     private function shouldStopMultilineSearch(int $index, int $parenthesisDepth, int $squareDepth): bool
     {
@@ -207,6 +231,9 @@ final readonly class FluentChainCollector
 
     /**
      * Checks whether a wrapper block already spans multiple lines.
+     *
+     * @param int $startIndex
+     * @param int $endIndex
      */
     private function blockContainsNewline(int $startIndex, int $endIndex): bool
     {
@@ -225,6 +252,8 @@ final readonly class FluentChainCollector
 
     /**
      * Finds indentation immediately after the nearest previous line break.
+     *
+     * @param int $index
      */
     private function findIndentationBeforeIndex(int $index): string
     {
@@ -234,19 +263,21 @@ final readonly class FluentChainCollector
             }
 
             $content = $this->tokens[$currentIndex]->getContent();
-            $newlinePosition = strrpos($content, "\n");
+            $newlinePosition = mb_strrpos($content, "\n");
 
             if ($newlinePosition === false) {
                 continue;
             }
 
-            return substr($content, $newlinePosition + 1);
+            return mb_substr($content, $newlinePosition + 1);
         }
 
         return '';
     }
 
     /**
+     * @param int $startOperator
+     *
      * @return array{start: int, end: int, calls: list<array{operator: int, open: int, close: int}>}
      */
     private function collectMethodCallChain(int $startOperator): array
@@ -290,6 +321,8 @@ final readonly class FluentChainCollector
 
     /**
      * Detects fluent chain operators that are followed by a real method call.
+     *
+     * @param int $index
      */
     private function isMethodCallOperator(int $index): bool
     {

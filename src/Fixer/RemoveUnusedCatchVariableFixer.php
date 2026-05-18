@@ -29,10 +29,10 @@ final class RemoveUnusedCatchVariableFixer extends AbstractFixer
             'Removes unused variables from catch blocks (PHP 8.0+ non-capturing catch syntax).',
             [
                 new CodeSample(
-                    "<?php\ntry {\n    doWork();\n} catch (\\Exception \$e) {\n    return false;\n}\n"
+                    "<?php\ntry {\n    doWork();\n} catch (\\Exception \$e) {\n    return false;\n}\n",
                 ),
             ],
-            'Uses PHP 8.0+ non-capturing catch when the exception variable is never referenced in the catch body.'
+            'Uses PHP 8.0+ non-capturing catch when the exception variable is never referenced in the catch body.',
         );
     }
 

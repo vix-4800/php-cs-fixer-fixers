@@ -10,9 +10,9 @@ use PhpCsFixer\Tokenizer\Tokens;
 final readonly class FluentChainWhitespaceFormatter
 {
     /**
-     * @param Tokens $tokens Token stream being rewritten.
+     * @param Tokens $tokens    Token stream being rewritten.
      * @param string $lineBreak Configured project line ending.
-     * @param string $indent Single indentation unit from php-cs-fixer whitespace config.
+     * @param string $indent    Single indentation unit from php-cs-fixer whitespace config.
      */
     public function __construct(
         private Tokens $tokens,
@@ -24,6 +24,9 @@ final readonly class FluentChainWhitespaceFormatter
 
     /**
      * Removes wrapper-only newlines from an argument list when the inner content is already single-line.
+     *
+     * @param int $openParenthesisIndex
+     * @param int $closeParenthesisIndex
      */
     public function compactArgumentsIfPossible(int $openParenthesisIndex, int $closeParenthesisIndex): bool
     {
@@ -36,6 +39,9 @@ final readonly class FluentChainWhitespaceFormatter
 
     /**
      * Forces the operator onto its own continuation line.
+     *
+     * @param int    $operatorIndex
+     * @param string $targetIndentation
      */
     public function ensureLineBreakBeforeOperator(int $operatorIndex, string $targetIndentation): bool
     {
@@ -59,6 +65,9 @@ final readonly class FluentChainWhitespaceFormatter
 
     /**
      * Checks whether only outer wrapping whitespace would be removed.
+     *
+     * @param int $openParenthesisIndex
+     * @param int $closeParenthesisIndex
      */
     private function canCompactArguments(int $openParenthesisIndex, int $closeParenthesisIndex): bool
     {
@@ -83,7 +92,7 @@ final readonly class FluentChainWhitespaceFormatter
             $content .= $this->tokens[$index]->getContent();
         }
 
-        $trimmedContent = trim($content);
+        $trimmedContent = mb_trim($content);
 
         return $trimmedContent !== ''
             && !str_contains($trimmedContent, "\n")
@@ -92,6 +101,9 @@ final readonly class FluentChainWhitespaceFormatter
 
     /**
      * Clears only boundary whitespace so built-in fixers can finish single-line normalization.
+     *
+     * @param int $openParenthesisIndex
+     * @param int $closeParenthesisIndex
      */
     private function compactArguments(int $openParenthesisIndex, int $closeParenthesisIndex): bool
     {

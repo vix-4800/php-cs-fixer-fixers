@@ -30,10 +30,10 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
             'Removes unused key variables from foreach loops.',
             [
                 new CodeSample(
-                    "<?php\nforeach (\$items as \$key => \$value) {\n    echo \$value;\n}\n"
+                    "<?php\nforeach (\$items as \$key => \$value) {\n    echo \$value;\n}\n",
                 ),
             ],
-            'When the key variable in a foreach is never referenced in the loop body, the "key =>" part is removed.'
+            'When the key variable in a foreach is never referenced in the loop body, the "key =>" part is removed.',
         );
     }
 
@@ -116,9 +116,11 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         $keyTokens = [];
 
         for ($i = $asIndex + 1; $i < $doubleArrowIndex; ++$i) {
-            if (!$tokens[$i]->isWhitespace() && !$tokens[$i]->isComment()) {
-                $keyTokens[] = $i;
+            if ($tokens[$i]->isWhitespace() || $tokens[$i]->isComment()) {
+                continue;
             }
+
+            $keyTokens[] = $i;
         }
 
         if (count($keyTokens) !== 1 || !$tokens[$keyTokens[0]]->isGivenKind(T_VARIABLE)) {

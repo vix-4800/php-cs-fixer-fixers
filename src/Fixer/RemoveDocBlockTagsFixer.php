@@ -40,11 +40,11 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
             'Removes configurable unwanted tags from PHPDoc blocks.',
             [
                 new CodeSample(
-                    "<?php\n/**\n * My class.\n *\n * @category  Class\n * @package   Crm\n * @author    User <user@example.com>\n * @copyright 2024 Crm\n * @license   MIT License\n * @link      http://example.com/\n */\nclass Foo {}\n"
+                    "<?php\n/**\n * My class.\n *\n * @category  Class\n * @package   Crm\n * @author    User <user@example.com>\n * @copyright 2024 Crm\n * @license   MIT License\n * @link      http://example.com/\n */\nclass Foo {}\n",
                 ),
             ],
             'Removes unwanted PHPDoc tags such as @category, @author, @copyright, etc. '
-            . 'After removal, empty doc blocks are cleaned up by the no_empty_phpdoc fixer.'
+            . 'After removal, empty doc blocks are cleaned up by the no_empty_phpdoc fixer.',
         );
     }
 
@@ -67,10 +67,10 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
     protected function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
-            (new FixerOptionBuilder(
+            new FixerOptionBuilder(
                 'tags',
-                'List of PHPDoc tag names to remove (without the "@" prefix).'
-            ))
+                'List of PHPDoc tag names to remove (without the "@" prefix).',
+            )
                 ->setAllowedTypes(['array'])
                 ->setDefault([
                     'category',
@@ -98,7 +98,7 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
 
         $tagPattern = implode('|', array_map(
             static fn(string $tag): string => preg_quote($tag, '/'),
-            $tags
+            $tags,
         ));
 
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
@@ -109,9 +109,11 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
             $original = $tokens[$index]->getContent();
             $fixed = $this->stripUnwantedTags($original, $tagPattern);
 
-            if ($fixed !== $original) {
-                $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
+            if ($fixed === $original) {
+                continue;
             }
+
+            $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
         }
     }
 
@@ -151,7 +153,7 @@ final class RemoveDocBlockTagsFixer extends AbstractFixer implements Configurabl
                     if (str_starts_with($afterStar, '@')) {
                         // New tag starts — stop skipping and keep this line
                         $skipping = false;
-                    } elseif ($afterStar !== '' && $afterStar !== '/') {
+                    } elseif (!in_array($afterStar, ['', '/'], true)) {
                         // Non-empty continuation line belonging to the removed tag
                         continue;
                     } else {

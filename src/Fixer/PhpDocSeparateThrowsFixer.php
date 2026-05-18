@@ -30,10 +30,10 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
             'PHPDoc @throws tags must list one exception type per tag.',
             [
                 new CodeSample(
-                    "<?php\n/**\n * @throws RuntimeException|LogicException\n */\nfunction foo(): void {}\n"
+                    "<?php\n/**\n * @throws RuntimeException|LogicException\n */\nfunction foo(): void {}\n",
                 ),
             ],
-            'Splits `@throws A|B` into two consecutive `@throws` tags.'
+            'Splits `@throws A|B` into two consecutive `@throws` tags.',
         );
     }
 
@@ -59,9 +59,11 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
             $original = $tokens[$index]->getContent();
             $fixed = $this->separateThrowsTags($original);
 
-            if ($fixed !== $original) {
-                $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
+            if ($fixed === $original) {
+                continue;
             }
+
+            $tokens[$index] = new Token([T_DOC_COMMENT, $fixed]);
         }
     }
 
@@ -110,7 +112,7 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
 
         return array_map(
             static fn(string $singleType): string => $indent . $tagPrefix . $singleType . $description,
-            $types
+            $types,
         );
     }
 
@@ -129,9 +131,9 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
         for ($index = 0; $index < $length; ++$index) {
             $char = mb_substr($type, $index, 1);
 
-            if ($char === '<' || $char === '(' || $char === '[' || $char === '{') {
+            if (in_array($char, ['<', '(', '[', '{'], true)) {
                 ++$depth;
-            } elseif ($char === '>' || $char === ')' || $char === ']' || $char === '}') {
+            } elseif (in_array($char, ['>', ')', ']', '}'], true)) {
                 $depth = max(0, $depth - 1);
             }
 

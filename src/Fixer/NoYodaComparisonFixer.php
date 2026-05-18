@@ -44,10 +44,10 @@ final class NoYodaComparisonFixer extends AbstractFixer
             'Comparisons should be written with the variable on the left side (non-Yoda style).',
             [
                 new CodeSample(
-                    "<?php\nif (null === \$var) {}\nif (true === \$condition) {}\nif (42 === \$count) {}\n"
+                    "<?php\nif (null === \$var) {}\nif (true === \$condition) {}\nif (42 === \$count) {}\n",
                 ),
             ],
-            'Converts Yoda-style comparisons to standard comparisons for better readability.'
+            'Converts Yoda-style comparisons to standard comparisons for better readability.',
         );
     }
 
@@ -173,15 +173,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
             return $this->followVariableChain($tokens, $index);
         }
 
-        if ($token->isGivenKind([
-            T_ARRAY_CAST,
-            T_BOOL_CAST,
-            T_DOUBLE_CAST,
-            T_INT_CAST,
-            T_OBJECT_CAST,
-            T_STRING_CAST,
-            T_UNSET_CAST,
-        ])) {
+        if ($token->isGivenKind([T_ARRAY_CAST, T_BOOL_CAST, T_DOUBLE_CAST, T_INT_CAST, T_OBJECT_CAST, T_STRING_CAST, T_UNSET_CAST])) {
             $next = $tokens->getNextMeaningfulToken($index);
 
             return $next === null ? $index : $this->findExpressionEnd($tokens, $next);
@@ -387,6 +379,10 @@ final class NoYodaComparisonFixer extends AbstractFixer
     }
 
     /**
+     * @param Tokens $tokens
+     * @param int    $start
+     * @param int    $end
+     *
      * @return list<Token>
      */
     private function extractTokens(Tokens $tokens, int $start, int $end): array
@@ -425,7 +421,11 @@ final class NoYodaComparisonFixer extends AbstractFixer
     }
 
     /**
+     * @param Tokens      $tokens
+     * @param int         $start
+     * @param int         $end
      * @param list<Token> $newLeftTokens
+     * @param Token       $operator
      * @param list<Token> $newRightTokens
      */
     private function replaceTokens(
@@ -434,7 +434,7 @@ final class NoYodaComparisonFixer extends AbstractFixer
         int $end,
         array $newLeftTokens,
         Token $operator,
-        array $newRightTokens
+        array $newRightTokens,
     ): void {
         /** @var list<Token> $insertTokens */
         $insertTokens = [];

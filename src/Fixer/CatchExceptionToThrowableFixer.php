@@ -35,10 +35,10 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             'Replaces Exception with Throwable in catch blocks, including imported aliases to Exception.',
             [
                 new CodeSample(
-                    "<?php\nuse Exception as E;\n\ntry {\n    doWork();\n} catch (Exception|E \$e) {\n    report(\$e);\n}\n"
+                    "<?php\nuse Exception as E;\n\ntry {\n    doWork();\n} catch (Exception|E \$e) {\n    report(\$e);\n}\n",
                 ),
             ],
-            'Prefers Throwable catches instead of Exception for broader and consistent handling.'
+            'Prefers Throwable catches instead of Exception for broader and consistent handling.',
         );
     }
 
@@ -66,9 +66,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             $this->fixCatchTypes($tokens, $index);
         }
 
-        if ($this->needsThrowableImport) {
-            $this->addThrowableImportIfNeeded($tokens);
+        if (!$this->needsThrowableImport) {
+            return;
         }
+
+        $this->addThrowableImportIfNeeded($tokens);
     }
 
     /**
@@ -339,9 +341,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
                 continue;
             }
 
-            if ($atomStart === null) {
-                $atomStart = $i;
-            }
+            $atomStart ??= $i;
 
             $atomEnd = $i;
         }
@@ -399,9 +399,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             $name = '';
 
             for ($i = $next; $i < $semiColon; ++$i) {
-                if (!$tokens[$i]->isWhitespace() && !$tokens[$i]->isComment()) {
-                    $name .= $tokens[$i]->getContent();
+                if ($tokens[$i]->isWhitespace() || $tokens[$i]->isComment()) {
+                    continue;
                 }
+
+                $name .= $tokens[$i]->getContent();
             }
 
             if (mb_strtolower(mb_trim($name)) === 'throwable') {
@@ -452,23 +454,27 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
 
             $semiColon = $tokens->getNextTokenOfKind($index, [';']);
 
-            if ($semiColon !== null) {
-                $insertAfter = $semiColon;
-                $index = $semiColon;
+            if ($semiColon === null) {
+                continue;
             }
+
+            $insertAfter = $semiColon;
+            $index = $semiColon;
         }
 
         if ($insertAfter === null) {
             for ($index = 0; $index < $tokens->count(); ++$index) {
-                if ($tokens[$index]->isGivenKind(T_NAMESPACE)) {
-                    $semiColon = $tokens->getNextTokenOfKind($index, [';']);
-
-                    if ($semiColon !== null) {
-                        $insertAfter = $semiColon;
-                    }
-
-                    break;
+                if (!$tokens[$index]->isGivenKind(T_NAMESPACE)) {
+                    continue;
                 }
+
+                $semiColon = $tokens->getNextTokenOfKind($index, [';']);
+
+                if ($semiColon !== null) {
+                    $insertAfter = $semiColon;
+                }
+
+                break;
             }
         }
 

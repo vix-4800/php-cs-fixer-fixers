@@ -18,12 +18,12 @@ use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
 
 /**
- * @implements ConfigurableFixerInterface<array{break_on_first_call?: bool, min_chain_calls?: null|int}, array{break_on_first_call: bool, min_chain_calls: null|int}>
+ * @implements ConfigurableFixerInterface<array{break_on_first_call?: bool, min_chain_calls?: int|null}, array{break_on_first_call: bool, min_chain_calls: int|null}>
  */
 final class FluentChainLineBreaksFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
     /**
-     * @var array{break_on_first_call: bool, min_chain_calls: null|int}
+     * @var array{break_on_first_call: bool, min_chain_calls: int|null}
      */
     protected array $configuration = [
         'break_on_first_call' => false,
@@ -48,16 +48,18 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
             'Splits multiline fluent chains so each chained method call starts on its own line.',
             [
                 new CodeSample(
-                    "<?php\n\nLinkHelpDeskCategoryResponsibles::find()->where(\n    ['category_id' => \$this->category_id, 'responsible_id' => Yii::\$app->user->id],\n)->exists();\n"
+                    "<?php\n\nLinkHelpDeskCategoryResponsibles::find()->where(\n    ['category_id' => \$this->category_id, 'responsible_id' => Yii::\$app->user->id],\n)->exists();\n",
                 ),
             ],
             'When a fluent chain already spans multiple lines, each chained call is moved to its own line. '
-                . 'Single-line chains are left untouched.'
+                . 'Single-line chains are left untouched.',
         );
     }
 
     /**
      * Performs a cheap pre-check before the fixer runs.
+     *
+     * @param Tokens $tokens
      */
     public function isCandidate(Tokens $tokens): bool
     {
@@ -65,11 +67,11 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
     }
 
     /**
-     * @param array{break_on_first_call?: bool, min_chain_calls?: null|int} $configuration
+     * @param array{break_on_first_call?: bool, min_chain_calls?: int|null} $configuration
      */
     public function configure(array $configuration): void
     {
-        /** @var array{break_on_first_call: bool, min_chain_calls: null|int} $configuration */
+        /** @var array{break_on_first_call: bool, min_chain_calls: int|null} $configuration */
         $configuration = $this->getConfigurationDefinition()->resolve($configuration);
 
         $this->configuration = $configuration;
@@ -91,6 +93,9 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
 
     /**
      * Splits multiline fluent chains and compacts argument wrappers when that is safe.
+     *
+     * @param SplFileInfo $file
+     * @param Tokens      $tokens
      */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
@@ -98,7 +103,7 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
         $formatter = new FluentChainWhitespaceFormatter(
             $tokens,
             $this->whitespacesConfig->getLineEnding(),
-            $this->whitespacesConfig->getIndent()
+            $this->whitespacesConfig->getIndent(),
         );
         $breakOnFirstCall = $this->configuration['break_on_first_call'];
         $minChainCalls = $this->configuration['min_chain_calls'];
@@ -126,9 +131,11 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
 
                     $hasChanges = $formatter->compactArgumentsIfPossible($call['open'], $call['close']) || $hasChanges;
 
-                    if ($breakOnFirstCall || $callIndex > 0) {
-                        $hasChanges = $formatter->ensureLineBreakBeforeOperator($call['operator'], $targetWhitespace) || $hasChanges;
+                    if (!$breakOnFirstCall && $callIndex <= 0) {
+                        continue;
                     }
+
+                    $hasChanges = $formatter->ensureLineBreakBeforeOperator($call['operator'], $targetWhitespace) || $hasChanges;
                 }
 
                 if ($hasChanges) {
@@ -141,11 +148,11 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
     private function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
-            (new FixerOptionBuilder('break_on_first_call', 'Whether the first chained method call should start on a new line.'))
+            new FixerOptionBuilder('break_on_first_call', 'Whether the first chained method call should start on a new line.')
                 ->setAllowedTypes(['bool'])
                 ->setDefault(false)
                 ->getOption(),
-            (new FixerOptionBuilder('min_chain_calls', 'Minimum number of chained method calls required before formatting. Null disables the limit.'))
+            new FixerOptionBuilder('min_chain_calls', 'Minimum number of chained method calls required before formatting. Null disables the limit.')
                 ->setAllowedTypes(['null', 'int'])
                 ->setAllowedValues([
                     static fn(mixed $value): bool => $value === null || (is_int($value) && $value > 0),

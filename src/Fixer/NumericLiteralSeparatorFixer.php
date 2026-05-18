@@ -41,10 +41,10 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
             'Numeric literals should use underscore as thousands separator for better readability.',
             [
                 new CodeSample(
-                    "<?php\n\$price = 1234567;\n\$count = 1000000;\n"
+                    "<?php\n\$price = 1234567;\n\$count = 1000000;\n",
                 ),
             ],
-            'Adds underscore separators to numeric literals with configurable minimum digit count.'
+            'Adds underscore separators to numeric literals with configurable minimum digit count.',
         );
     }
 
@@ -81,7 +81,7 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
     private function createConfigurationDefinition(): FixerConfigurationResolverInterface
     {
         return new FixerConfigurationResolver([
-            (new FixerOptionBuilder('min_digits', 'Minimum number of digits before applying separator.'))
+            new FixerOptionBuilder('min_digits', 'Minimum number of digits before applying separator.')
                 ->setAllowedTypes(['int'])
                 ->setDefault(5)
                 ->getOption(),
@@ -109,7 +109,7 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
                 continue;
             }
 
-            if (preg_match('/^0[0-9]/', $content) === 1) {
+            if (preg_match('/^0\d/', $content) === 1) {
                 continue;
             }
 
@@ -119,9 +119,11 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
                 $formatted = $this->formatInteger($content, $minDigits);
             }
 
-            if ($formatted !== $content) {
-                $tokens[$index] = new Token([$token->getId(), $formatted]);
+            if ($formatted === $content) {
+                continue;
             }
+
+            $tokens[$index] = new Token([$token->getId(), $formatted]);
         }
     }
 
