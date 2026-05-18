@@ -9,6 +9,7 @@ use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
@@ -327,7 +328,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
                 continue;
             }
 
-            if ($token->equals('|')) {
+            if ($token->equals('|') || $token->isGivenKind(CT::T_TYPE_ALTERNATION)) {
                 if ($atomStart !== null && $atomEnd !== null) {
                     $atoms[] = ['start' => $atomStart, 'end' => $atomEnd];
                 }
@@ -485,13 +486,20 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             return;
         }
 
-        $tokens->insertAt($insertAfter + 1, [
-            new Token([T_WHITESPACE, "\n"]),
+        $importTokens = [
             new Token([T_USE, 'use']),
             new Token([T_WHITESPACE, ' ']),
             new Token([T_STRING, 'Throwable']),
             new Token(';'),
-        ]);
+            new Token([T_WHITESPACE, "\n"]),
+        ];
+
+        if (!$tokens[$insertAfter]->isGivenKind(T_OPEN_TAG)) {
+            array_unshift($importTokens, new Token([T_WHITESPACE, "\n"]));
+            array_pop($importTokens);
+        }
+
+        $tokens->insertAt($insertAfter + 1, $importTokens);
     }
 
     private function isExceptionReference(string $typeName): bool
