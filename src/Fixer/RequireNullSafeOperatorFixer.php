@@ -43,8 +43,7 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
     #[Override]
     public function getPriority(): int
     {
-        // Run after no_yoda_comparison so conditions are already normalized
-        return -20;
+        return -5;
     }
 
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
@@ -67,7 +66,7 @@ final class RequireNullSafeOperatorFixer extends AbstractFixer
             return;
         }
 
-        // Must be: $var !== null  (non-Yoda; NoYodaComparisonFixer runs first)
+        // Must be: $var !== null
         if (!$tokens[$leftIndex]->isGivenKind(T_VARIABLE)) {
             return;
         }

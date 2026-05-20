@@ -12,7 +12,6 @@ Each section includes a short description, configuration parameters, and a minim
   - [VixFixer/catch\_exception\_to\_throwable](#vixfixercatch_exception_to_throwable)
   - [VixFixer/fluent\_chain\_line\_breaks](#vixfixerfluent_chain_line_breaks)
   - [VixFixer/isset\_coalesce](#vixfixerisset_coalesce)
-  - [VixFixer/no\_yoda\_comparison](#vixfixerno_yoda_comparison)
   - [VixFixer/numeric\_literal\_separator](#vixfixernumeric_literal_separator)
   - [VixFixer/phpdoc\_opening\_line](#vixfixerphpdoc_opening_line)
   - [VixFixer/phpdoc\_self\_reference](#vixfixerphpdoc_self_reference)
@@ -122,30 +121,6 @@ After:
 ```php
 if (isset($payload['user'])) {
     processUser();
-}
-```
-
-## VixFixer/no_yoda_comparison
-
-Rewrites Yoda-style comparisons into the more common variable-first form.
-
-Parameters:
-
-- None.
-
-Before:
-
-```php
-if (null === $result) {
-    return;
-}
-```
-
-After:
-
-```php
-if ($result === null) {
-    return;
 }
 ```
 

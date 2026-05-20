@@ -18,7 +18,6 @@ use Vix\PhpCsFixerFixers\Fixer\BlankLineAfterStatementFixer;
 use Vix\PhpCsFixerFixers\Fixer\CatchExceptionToThrowableFixer;
 use Vix\PhpCsFixerFixers\Fixer\FluentChainLineBreaksFixer;
 use Vix\PhpCsFixerFixers\Fixer\IssetCoalesceFixer;
-use Vix\PhpCsFixerFixers\Fixer\NoYodaComparisonFixer;
 use Vix\PhpCsFixerFixers\Fixer\NumericLiteralSeparatorFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocOpeningLineFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
@@ -39,7 +38,6 @@ final class FixerSmokeTest extends TestCase
         yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable'];
         yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks'];
         yield 'isset_coalesce' => [new IssetCoalesceFixer(), 'VixFixer/isset_coalesce'];
-        yield 'no_yoda_comparison' => [new NoYodaComparisonFixer(), 'VixFixer/no_yoda_comparison'];
         yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator'];
         yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line'];
         yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference'];
@@ -63,15 +61,6 @@ final class FixerSmokeTest extends TestCase
         self::assertSame($ruleName, $fixer->getName());
         self::assertNotSame('', $fixer->getDefinition()->getSummary());
         self::assertGreaterThanOrEqual(-100, $fixer->getPriority());
-    }
-
-    public function testNoYodaComparisonFixerAppliesFix(): void
-    {
-        self::assertFixes(
-            new NoYodaComparisonFixer(),
-            "<?php\nif (\$value === null) {}\n",
-            "<?php\nif (null === \$value) {}\n",
-        );
     }
 
     public function testAllFixersCanBeUsedAsVixFixerRules(): void

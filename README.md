@@ -34,7 +34,7 @@ $finder = Finder::create()->in(__DIR__ . '/src');
 return (new Config())
     ->registerCustomFixers(Fixers::all())
     ->setRules([
-        'VixFixer/no_yoda_comparison' => true,
+        'VixFixer/numeric_literal_separator' => true,
     ])
     ->setFinder($finder);
 ```

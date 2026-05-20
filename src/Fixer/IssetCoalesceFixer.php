@@ -43,8 +43,7 @@ final class IssetCoalesceFixer extends AbstractFixer
     #[Override]
     public function getPriority(): int
     {
-        // Run after no_yoda_comparison to work with normalized comparisons
-        return -15;
+        return -5;
     }
 
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
