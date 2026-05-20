@@ -8,6 +8,11 @@ use Vix\PhpCsFixerFixers\Fixer\CatchExceptionToThrowableFixer;
 
 final class CatchExceptionToThrowableFixerTest extends AbstractFixerTestCase
 {
+    public function testIsRisky(): void
+    {
+        self::assertTrue((new CatchExceptionToThrowableFixer())->isRisky());
+    }
+
     public function testConvertsSimpleCatch(): void
     {
         self::assertFixes(

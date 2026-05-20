@@ -53,6 +53,12 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return 0;
     }
 
+    #[Override]
+    public function isRisky(): bool
+    {
+        return true;
+    }
+
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         $this->exceptionAliases = $this->collectExceptionAliases($tokens);
