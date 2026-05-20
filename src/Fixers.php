@@ -14,7 +14,6 @@ use Vix\PhpCsFixerFixers\Fixer\NumericLiteralSeparatorFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocOpeningLineFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
-use Vix\PhpCsFixerFixers\Fixer\RemoveDocBlockTagsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
 use Vix\PhpCsFixerFixers\Fixer\RequireNullSafeOperatorFixer;
@@ -36,7 +35,6 @@ final class Fixers
             new PhpDocOpeningLineFixer(),
             new PhpDocSelfReferenceFixer(),
             new PhpDocSeparateThrowsFixer(),
-            new RemoveDocBlockTagsFixer(),
             new RemoveUnusedCatchVariableFixer(),
             new RemoveUnusedForeachKeyFixer(),
             new RequireNullSafeOperatorFixer(),

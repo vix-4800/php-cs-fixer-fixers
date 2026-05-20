@@ -17,7 +17,6 @@ Each section includes a short description, configuration parameters, and a minim
   - [VixFixer/phpdoc\_opening\_line](#vixfixerphpdoc_opening_line)
   - [VixFixer/phpdoc\_self\_reference](#vixfixerphpdoc_self_reference)
   - [VixFixer/phpdoc\_separate\_throws](#vixfixerphpdoc_separate_throws)
-  - [VixFixer/remove\_doc\_block\_tags](#vixfixerremove_doc_block_tags)
   - [VixFixer/remove\_unused\_catch\_variable](#vixfixerremove_unused_catch_variable)
   - [VixFixer/remove\_unused\_foreach\_key](#vixfixerremove_unused_foreach_key)
   - [VixFixer/require\_null\_safe\_operator](#vixfixerrequire_null_safe_operator)
@@ -246,37 +245,6 @@ After:
  * @throws RuntimeException When validation fails.
  * @throws LogicException When validation fails.
  */
-```
-
-## VixFixer/remove_doc_block_tags
-
-Removes unwanted PHPDoc tags and their continuation lines from doc blocks.
-
-Parameters:
-
-- `tags`: `list<string>`, default `['category', 'package', 'subpackage', 'author', 'copyright', 'license', 'link', 'version']`
-
-Before:
-
-```php
-/**
- * Builds the payload.
- *
- * @author Jane Doe
- * @param array<string, mixed> $payload
- */
-function buildPayload(array $payload): void {}
-```
-
-After:
-
-```php
-/**
- * Builds the payload.
- *
- * @param array<string, mixed> $payload
- */
-function buildPayload(array $payload): void {}
 ```
 
 ## VixFixer/remove_unused_catch_variable

@@ -23,7 +23,6 @@ use Vix\PhpCsFixerFixers\Fixer\NumericLiteralSeparatorFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocOpeningLineFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
-use Vix\PhpCsFixerFixers\Fixer\RemoveDocBlockTagsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
 use Vix\PhpCsFixerFixers\Fixer\RequireNullSafeOperatorFixer;
@@ -45,7 +44,6 @@ final class FixerSmokeTest extends TestCase
         yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line'];
         yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference'];
         yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws'];
-        yield 'remove_doc_block_tags' => [new RemoveDocBlockTagsFixer(), 'VixFixer/remove_doc_block_tags'];
         yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable'];
         yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key'];
         yield 'require_null_safe_operator' => [new RequireNullSafeOperatorFixer(), 'VixFixer/require_null_safe_operator'];
