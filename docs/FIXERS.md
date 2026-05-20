@@ -11,14 +11,12 @@ Each section includes a short description, configuration parameters, and a minim
   - [VixFixer/blank\_line\_after\_statement](#vixfixerblank_line_after_statement)
   - [VixFixer/catch\_exception\_to\_throwable](#vixfixercatch_exception_to_throwable)
   - [VixFixer/fluent\_chain\_line\_breaks](#vixfixerfluent_chain_line_breaks)
-  - [VixFixer/isset\_coalesce](#vixfixerisset_coalesce)
   - [VixFixer/numeric\_literal\_separator](#vixfixernumeric_literal_separator)
   - [VixFixer/phpdoc\_opening\_line](#vixfixerphpdoc_opening_line)
   - [VixFixer/phpdoc\_self\_reference](#vixfixerphpdoc_self_reference)
   - [VixFixer/phpdoc\_separate\_throws](#vixfixerphpdoc_separate_throws)
   - [VixFixer/remove\_unused\_catch\_variable](#vixfixerremove_unused_catch_variable)
   - [VixFixer/remove\_unused\_foreach\_key](#vixfixerremove_unused_foreach_key)
-  - [VixFixer/require\_null\_safe\_operator](#vixfixerrequire_null_safe_operator)
 
 ## VixFixer/blank_line_after_statement
 
@@ -54,6 +52,7 @@ Replaces `Exception` in `catch` clauses with `Throwable` so the handler covers a
 Parameters:
 
 - None.
+- Risky: yes.
 
 Before:
 
@@ -98,30 +97,6 @@ $users = User::query()
     ->orderBy('id')
     ->limit(10)
     ->get();
-```
-
-## VixFixer/isset_coalesce
-
-Turns null-coalescing comparisons into `isset()` or `!isset()` when the expression is safely equivalent.
-
-Parameters:
-
-- None.
-
-Before:
-
-```php
-if (($payload['user'] ?? null) !== null) {
-    processUser();
-}
-```
-
-After:
-
-```php
-if (isset($payload['user'])) {
-    processUser();
-}
 ```
 
 ## VixFixer/numeric_literal_separator
@@ -272,24 +247,4 @@ After:
 foreach ($items as $item) {
     echo $item;
 }
-```
-
-## VixFixer/require_null_safe_operator
-
-Replaces ternary null checks with the null-safe operator when the expression matches the supported pattern.
-
-Parameters:
-
-- None.
-
-Before:
-
-```php
-$name = $user !== null ? $user->getName() : null;
-```
-
-After:
-
-```php
-$name = $user?->getName();
 ```

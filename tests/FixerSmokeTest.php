@@ -17,38 +17,34 @@ use SplFileInfo;
 use Vix\PhpCsFixerFixers\Fixer\BlankLineAfterStatementFixer;
 use Vix\PhpCsFixerFixers\Fixer\CatchExceptionToThrowableFixer;
 use Vix\PhpCsFixerFixers\Fixer\FluentChainLineBreaksFixer;
-use Vix\PhpCsFixerFixers\Fixer\IssetCoalesceFixer;
 use Vix\PhpCsFixerFixers\Fixer\NumericLiteralSeparatorFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocOpeningLineFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
-use Vix\PhpCsFixerFixers\Fixer\RequireNullSafeOperatorFixer;
 use Vix\PhpCsFixerFixers\Fixers;
 
 final class FixerSmokeTest extends TestCase
 {
     /**
-     * @return iterable<string, array{AbstractFixer, string}>
+     * @return iterable<string, array{AbstractFixer, string, bool}>
      */
     public static function fixerProvider(): iterable
     {
-        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'VixFixer/blank_line_after_statement'];
-        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable'];
-        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks'];
-        yield 'isset_coalesce' => [new IssetCoalesceFixer(), 'VixFixer/isset_coalesce'];
-        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator'];
-        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line'];
-        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference'];
-        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws'];
-        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable'];
-        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key'];
-        yield 'require_null_safe_operator' => [new RequireNullSafeOperatorFixer(), 'VixFixer/require_null_safe_operator'];
+        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'VixFixer/blank_line_after_statement', false];
+        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable', true];
+        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks', false];
+        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator', false];
+        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line', false];
+        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference', false];
+        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws', false];
+        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable', false];
+        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key', false];
     }
 
     #[DataProvider('fixerProvider')]
-    public function testFixerCanBeRegistered(AbstractFixer $fixer, string $ruleName): void
+    public function testFixerCanBeRegistered(AbstractFixer $fixer, string $ruleName, bool $isRisky): void
     {
         if ($fixer instanceof ConfigurableFixerInterface) {
             $fixer->configure([]);
@@ -61,6 +57,7 @@ final class FixerSmokeTest extends TestCase
         self::assertSame($ruleName, $fixer->getName());
         self::assertNotSame('', $fixer->getDefinition()->getSummary());
         self::assertGreaterThanOrEqual(-100, $fixer->getPriority());
+        self::assertSame($isRisky, $fixer->isRisky());
     }
 
     public function testAllFixersCanBeUsedAsVixFixerRules(): void
