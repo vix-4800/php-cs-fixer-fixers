@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Fixer;
 
-use const PHP_INT_MAX;
-
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Tokens;
 
@@ -134,11 +132,11 @@ final readonly class FluentChainCollector
                 continue;
             }
 
-            if ($this->isOpeningMultilineBlock($startIndex, $index, '(', $parenthesisDepth, Tokens::BLOCK_TYPE_PARENTHESIS_BRACE)) {
+            if ($this->isOpeningMultilineBlock($startIndex, $index, '(', $parenthesisDepth)) {
                 return true;
             }
 
-            if ($this->isOpeningMultilineBlock($startIndex, $index, '[', $squareDepth, Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE)) {
+            if ($this->isOpeningMultilineBlock($startIndex, $index, '[', $squareDepth)) {
                 return true;
             }
 
@@ -181,14 +179,12 @@ final readonly class FluentChainCollector
      * @param int    $index
      * @param string $openingToken
      * @param int    $depth
-     * @param int    $blockType
      */
     private function isOpeningMultilineBlock(
         int $startIndex,
         int $index,
         string $openingToken,
         int &$depth,
-        int $blockType,
     ): bool {
         if (
             !$this->tokens[$index]->equals($openingToken)
@@ -203,14 +199,13 @@ final readonly class FluentChainCollector
             return false;
         }
 
-        $blockEnd = match ($blockType) {
-            Tokens::BLOCK_TYPE_ARRAY_INDEX_CURLY_BRACE,
-            Tokens::BLOCK_TYPE_ARRAY_SQUARE_BRACE,
-            Tokens::BLOCK_TYPE_CURLY_BRACE,
-            Tokens::BLOCK_TYPE_INDEX_SQUARE_BRACE,
-            Tokens::BLOCK_TYPE_PARENTHESIS_BRACE => $this->tokens->findBlockEnd($blockType, $index),
-            default => PHP_INT_MAX,
-        };
+        $detectedBlockType = Tokens::detectBlockType($this->tokens[$index]);
+
+        if ($detectedBlockType === null || !$detectedBlockType['isStart']) {
+            return false;
+        }
+
+        $blockEnd = $this->tokens->findBlockEnd($detectedBlockType['type'], $index);
 
         return $blockEnd > $startIndex && $this->blockContainsNewline($index, $blockEnd);
     }

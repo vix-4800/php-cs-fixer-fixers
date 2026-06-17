@@ -55,6 +55,15 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
+    public function testLeavesChainInsideArrayOffsetUnchanged(): void
+    {
+        self::assertFixes(
+            new FluentChainLineBreaksFixer(),
+            "<?php\nforeach (PageTypeEnum::cases() as \$case) {\n    \$this->pageMap[\$case->description()] = \$case->value;\n}\n",
+            "<?php\nforeach (PageTypeEnum::cases() as \$case) {\n    \$this->pageMap[\$case->description()] = \$case->value;\n}\n",
+        );
+    }
+
     public function testSkipsChainBelowMinimumCallCount(): void
     {
         self::assertFixes(
