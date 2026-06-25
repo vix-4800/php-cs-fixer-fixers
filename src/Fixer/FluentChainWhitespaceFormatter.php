@@ -10,9 +10,9 @@ use PhpCsFixer\Tokenizer\Tokens;
 final readonly class FluentChainWhitespaceFormatter
 {
     /**
-     * @param Tokens $tokens    Token stream being rewritten.
-     * @param string $lineBreak Configured project line ending.
-     * @param string $indent    Single indentation unit from php-cs-fixer whitespace config.
+     * @param Tokens<Token> $tokens    token stream being rewritten
+     * @param string        $lineBreak configured project line ending
+     * @param string        $indent    single indentation unit from php-cs-fixer whitespace config
      */
     public function __construct(
         private Tokens $tokens,

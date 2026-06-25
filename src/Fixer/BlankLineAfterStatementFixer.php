@@ -17,9 +17,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\BlankLineAfterStatementFixerTest;
 
 /**
  * @implements ConfigurableFixerInterface<array{statements?: list<string>}, array{statements: list<string>}>
+ *
+ * @see BlankLineAfterStatementFixerTest
  */
 final class BlankLineAfterStatementFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
@@ -54,6 +57,9 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isAnyTokenKindsFound($this->tokenKinds);
@@ -109,6 +115,10 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         ]);
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
@@ -128,6 +138,10 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         }
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $startIndex
+     */
     private function findStatementEnd(Tokens $tokens, int $startIndex): ?int
     {
         $token = $tokens[$startIndex];
@@ -167,6 +181,10 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         return null;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $startIndex
+     */
     private function findBlockEnd(Tokens $tokens, int $startIndex): ?int
     {
         $openBraceIndex = $tokens->getNextTokenOfKind($startIndex, ['{']);
@@ -190,6 +208,10 @@ final class BlankLineAfterStatementFixer extends AbstractFixer implements Config
         return $closeBraceIndex;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $index
+     */
     private function ensureBlankLineAfter(Tokens $tokens, int $index): void
     {
         $nextIndex = $index + 1;

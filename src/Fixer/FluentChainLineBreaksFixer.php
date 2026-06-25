@@ -14,11 +14,15 @@ use PhpCsFixer\FixerConfiguration\FixerOptionBuilder;
 use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\FluentChainLineBreaksFixerTest;
 
 /**
  * @implements ConfigurableFixerInterface<array{break_on_first_call?: bool, min_chain_calls?: int|null}, array{break_on_first_call: bool, min_chain_calls: int|null}>
+ *
+ * @see FluentChainLineBreaksFixerTest
  */
 final class FluentChainLineBreaksFixer extends AbstractFixer implements ConfigurableFixerInterface, WhitespacesAwareFixerInterface
 {
@@ -59,7 +63,7 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
     /**
      * Performs a cheap pre-check before the fixer runs.
      *
-     * @param Tokens $tokens
+     * @param Tokens<Token> $tokens
      */
     public function isCandidate(Tokens $tokens): bool
     {
@@ -94,8 +98,8 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
     /**
      * Splits multiline fluent chains and compacts argument wrappers when that is safe.
      *
-     * @param SplFileInfo $file
-     * @param Tokens      $tokens
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
      */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
@@ -150,14 +154,14 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
         return new FixerConfigurationResolver([
             new FixerOptionBuilder('break_on_first_call', 'Whether the first chained method call should start on a new line.')
                 ->setAllowedTypes(['bool'])
-                ->setDefault(false)
+                ->setDefault(default: false)
                 ->getOption(),
             new FixerOptionBuilder('min_chain_calls', 'Minimum number of chained method calls required before formatting. Null disables the limit.')
                 ->setAllowedTypes(['null', 'int'])
                 ->setAllowedValues([
                     static fn(mixed $value): bool => $value === null || (is_int($value) && $value > 0),
                 ])
-                ->setDefault(null)
+                ->setDefault(default: null)
                 ->getOption(),
         ]);
     }

@@ -12,9 +12,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\PhpDocOpeningLineFixerTest;
 
 /**
  * Ensures multi-line PHPDoc blocks start with /** on its own line.
+ *
+ * @see PhpDocOpeningLineFixerTest
  */
 final class PhpDocOpeningLineFixer extends AbstractFixer
 {
@@ -38,6 +41,9 @@ final class PhpDocOpeningLineFixer extends AbstractFixer
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT);
@@ -50,6 +56,10 @@ final class PhpDocOpeningLineFixer extends AbstractFixer
         return 5;
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {

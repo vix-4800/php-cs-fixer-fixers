@@ -13,7 +13,12 @@ use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Throwable;
+use Vix\PhpCsFixerFixers\Tests\Fixer\CatchExceptionToThrowableFixerTest;
 
+/**
+ * @see CatchExceptionToThrowableFixerTest
+ */
 final class CatchExceptionToThrowableFixer extends AbstractFixer
 {
     /**
@@ -42,6 +47,9 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isAnyTokenKindsFound([T_CATCH, T_USE]);
@@ -59,6 +67,10 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return true;
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         $this->exceptionAliases = $this->collectExceptionAliases($tokens);
@@ -80,7 +92,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
     }
 
     /**
-     * @param Tokens $tokens
+     * @param Tokens<Token> $tokens
      *
      * @return array<string, true>
      */
@@ -156,6 +168,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return $aliases;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $end
+     */
     private function hasGroupUseSyntax(Tokens $tokens, int $start, int $end): bool
     {
         for ($i = $start; $i < $end; ++$i) {
@@ -168,7 +185,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
     }
 
     /**
-     * @param Tokens              $tokens
+     * @param Tokens<Token>       $tokens
      * @param int                 $start
      * @param int                 $end
      * @param array<string, true> $aliases
@@ -226,6 +243,10 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         $aliases[mb_strtolower($alias)] = true;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $catchIndex
+     */
     private function fixCatchTypes(Tokens $tokens, int $catchIndex): void
     {
         $openParenthesis = $tokens->getNextMeaningfulToken($catchIndex);
@@ -274,7 +295,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             $normalizedAtom = $this->normalizeTypeName($atomText);
 
             if ($normalizedAtom !== 'throwable' && $this->isExceptionReference($atomText)) {
-                $atomTokens = [new Token([T_STRING, 'Throwable'])];
+                $atomTokens = [new Token([T_STRING, Throwable::class])];
                 $normalizedAtom = 'throwable';
                 $changed = true;
                 $this->needsThrowableImport = true;
@@ -313,9 +334,9 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $start
-     * @param int    $end
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $end
      *
      * @return list<array{start: int, end: int}>
      */
@@ -359,6 +380,9 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return $atoms;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     private function hasThrowableImport(Tokens $tokens): bool
     {
         $curlyDepth = 0;
@@ -405,7 +429,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
             $name = '';
 
             for ($i = $next; $i < $semiColon; ++$i) {
-                if ($tokens[$i]->isWhitespace() || $tokens[$i]->isComment()) {
+                if ($tokens[$i]->isWhitespace()) {
+                    continue;
+                }
+
+                if ($tokens[$i]->isComment()) {
                     continue;
                 }
 
@@ -420,6 +448,9 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return false;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     private function addThrowableImportIfNeeded(Tokens $tokens): void
     {
         if ($this->hasThrowableImport($tokens)) {
@@ -501,7 +532,7 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         $importTokens = [
             new Token([T_USE, 'use']),
             new Token([T_WHITESPACE, ' ']),
-            new Token([T_STRING, 'Throwable']),
+            new Token([T_STRING, Throwable::class]),
             new Token(';'),
             new Token([T_WHITESPACE, "\n"]),
         ];
@@ -555,6 +586,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return end($parts);
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $end
+     */
     private function readTypeName(Tokens $tokens, int $start, int $end): string
     {
         $content = '';
@@ -577,9 +613,9 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
     }
 
     /**
-     * @param Tokens $tokens
-     * @param int    $start
-     * @param int    $end
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $end
      *
      * @return list<Token>
      */
@@ -604,6 +640,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return $cloned;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $end
+     */
     private function findNextMeaningfulInRange(Tokens $tokens, int $start, int $end): ?int
     {
         for ($i = $start; $i <= $end; ++$i) {
@@ -615,6 +656,11 @@ final class CatchExceptionToThrowableFixer extends AbstractFixer
         return null;
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $start
+     * @param int           $lowerBound
+     */
     private function findPrevMeaningfulInRange(Tokens $tokens, int $start, int $lowerBound): ?int
     {
         for ($i = $start; $i >= $lowerBound; --$i) {

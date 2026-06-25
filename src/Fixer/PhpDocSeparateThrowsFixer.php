@@ -12,9 +12,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\PhpDocSeparateThrowsFixerTest;
 
 /**
  * Splits PHPDoc @throws union types into separate @throws tags.
+ *
+ * @see PhpDocSeparateThrowsFixerTest
  */
 final class PhpDocSeparateThrowsFixer extends AbstractFixer
 {
@@ -37,6 +40,9 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT);
@@ -49,6 +55,10 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
         return 9;
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
@@ -131,9 +141,9 @@ final class PhpDocSeparateThrowsFixer extends AbstractFixer
         for ($index = 0; $index < $length; ++$index) {
             $char = mb_substr($type, $index, 1);
 
-            if (in_array($char, ['<', '(', '[', '{'], true)) {
+            if (in_array($char, ['<', '(', '[', '{'], strict: true)) {
                 ++$depth;
-            } elseif (in_array($char, ['>', ')', ']', '}'], true)) {
+            } elseif (in_array($char, ['>', ')', ']', '}'], strict: true)) {
                 $depth = max(0, $depth - 1);
             }
 

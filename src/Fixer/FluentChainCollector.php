@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Vix\PhpCsFixerFixers\Fixer;
 
 use PhpCsFixer\Tokenizer\CT;
+use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 final readonly class FluentChainCollector
 {
     /**
-     * @param Tokens $tokens Token stream being analyzed.
+     * @param Tokens<Token> $tokens token stream being analyzed
      */
     public function __construct(
         private Tokens $tokens

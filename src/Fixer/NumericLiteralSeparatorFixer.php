@@ -16,9 +16,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\NumericLiteralSeparatorFixerTest;
 
 /**
  * @implements ConfigurableFixerInterface<array{min_digits?: int}, array{min_digits: int}>
+ *
+ * @see NumericLiteralSeparatorFixerTest
  */
 final class NumericLiteralSeparatorFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
@@ -48,6 +51,9 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         if ($tokens->isTokenKindFound(T_LNUMBER)) {
@@ -88,6 +94,10 @@ final class NumericLiteralSeparatorFixer extends AbstractFixer implements Config
         ]);
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         $minDigits = $this->configuration['min_digits'];

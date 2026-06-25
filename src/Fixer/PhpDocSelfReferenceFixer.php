@@ -12,6 +12,7 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\PhpDocSelfReferenceFixerTest;
 
 /**
  * Replaces the class name with `self` in PHPDoc type annotations
@@ -20,6 +21,8 @@ use SplFileInfo;
  *
  * Only exact short-name matches are replaced (word-boundary check).
  * Fully-qualified names (e.g. \Foo\Bar) are intentionally left alone.
+ *
+ * @see PhpDocSelfReferenceFixerTest
  */
 final class PhpDocSelfReferenceFixer extends AbstractFixer
 {
@@ -42,6 +45,9 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_DOC_COMMENT)
@@ -54,6 +60,10 @@ final class PhpDocSelfReferenceFixer extends AbstractFixer
         return 0;
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         // Build a map of: doc-comment token index → class short name

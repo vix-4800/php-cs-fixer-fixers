@@ -12,9 +12,12 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use SplFileInfo;
+use Vix\PhpCsFixerFixers\Tests\Fixer\RemoveUnusedForeachKeyFixerTest;
 
 /**
  * Removes unused key variables from foreach loops.
+ *
+ * @see RemoveUnusedForeachKeyFixerTest
  */
 final class RemoveUnusedForeachKeyFixer extends AbstractFixer
 {
@@ -37,6 +40,9 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         );
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     */
     public function isCandidate(Tokens $tokens): bool
     {
         return $tokens->isTokenKindFound(T_FOREACH);
@@ -48,6 +54,10 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         return 0;
     }
 
+    /**
+     * @param SplFileInfo   $file
+     * @param Tokens<Token> $tokens
+     */
     protected function applyFix(SplFileInfo $file, Tokens $tokens): void
     {
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
@@ -59,6 +69,10 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         }
     }
 
+    /**
+     * @param Tokens<Token> $tokens
+     * @param int           $foreachIndex
+     */
     private function fixForeach(Tokens $tokens, int $foreachIndex): void
     {
         $openParen = $tokens->getNextMeaningfulToken($foreachIndex);
@@ -116,7 +130,11 @@ final class RemoveUnusedForeachKeyFixer extends AbstractFixer
         $keyTokens = [];
 
         for ($i = $asIndex + 1; $i < $doubleArrowIndex; ++$i) {
-            if ($tokens[$i]->isWhitespace() || $tokens[$i]->isComment()) {
+            if ($tokens[$i]->isWhitespace()) {
+                continue;
+            }
+
+            if ($tokens[$i]->isComment()) {
                 continue;
             }
 
