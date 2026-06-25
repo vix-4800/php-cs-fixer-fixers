@@ -15,6 +15,9 @@ use SplFileInfo;
 abstract class AbstractFixerTestCase extends TestCase
 {
     /**
+     * @param AbstractFixer             $fixer
+     * @param string                    $expected
+     * @param string                    $input
      * @param array<string, mixed>|null $configuration
      */
     final protected static function assertFixes(

@@ -26,23 +26,7 @@ use Vix\PhpCsFixerFixers\Fixers;
 
 final class FixerSmokeTest extends TestCase
 {
-    /**
-     * @return iterable<string, array{AbstractFixer, string, bool}>
-     */
-    public static function fixerProvider(): iterable
-    {
-        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'VixFixer/blank_line_after_statement', false];
-        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable', true];
-        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks', false];
-        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator', false];
-        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line', false];
-        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference', false];
-        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws', false];
-        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable', false];
-        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key', false];
-    }
-
-    #[DataProvider('fixerProvider')]
+    #[DataProvider('provideFixerCanBeRegisteredCases')]
     #[Test]
     public function fixerCanBeRegistered(AbstractFixer $fixer, string $ruleName, bool $isRisky): void
     {
@@ -58,6 +42,22 @@ final class FixerSmokeTest extends TestCase
         $this->assertNotSame('', $fixer->getDefinition()->getSummary());
         $this->assertGreaterThanOrEqual(-100, $fixer->getPriority());
         $this->assertSame($isRisky, $fixer->isRisky());
+    }
+
+    /**
+     * @return iterable<string, array{AbstractFixer, string, bool}>
+     */
+    public static function provideFixerCanBeRegisteredCases(): iterable
+    {
+        yield 'blank_line_after_statement' => [new BlankLineAfterStatementFixer(), 'VixFixer/blank_line_after_statement', false];
+        yield 'catch_exception_to_throwable' => [new CatchExceptionToThrowableFixer(), 'VixFixer/catch_exception_to_throwable', true];
+        yield 'fluent_chain_line_breaks' => [new FluentChainLineBreaksFixer(), 'VixFixer/fluent_chain_line_breaks', false];
+        yield 'numeric_literal_separator' => [new NumericLiteralSeparatorFixer(), 'VixFixer/numeric_literal_separator', false];
+        yield 'phpdoc_opening_line' => [new PhpDocOpeningLineFixer(), 'VixFixer/phpdoc_opening_line', false];
+        yield 'phpdoc_self_reference' => [new PhpDocSelfReferenceFixer(), 'VixFixer/phpdoc_self_reference', false];
+        yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws', false];
+        yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable', false];
+        yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key', false];
     }
 
     #[Test]
