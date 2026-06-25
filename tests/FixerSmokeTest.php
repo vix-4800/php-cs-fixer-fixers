@@ -9,11 +9,10 @@ use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\FixerFactory;
 use PhpCsFixer\RuleSet\RuleSet;
-use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\WhitespacesFixerConfig;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use SplFileInfo;
 use Vix\PhpCsFixerFixers\Fixer\BlankLineAfterStatementFixer;
 use Vix\PhpCsFixerFixers\Fixer\CatchExceptionToThrowableFixer;
 use Vix\PhpCsFixerFixers\Fixer\FluentChainLineBreaksFixer;
@@ -44,7 +43,8 @@ final class FixerSmokeTest extends TestCase
     }
 
     #[DataProvider('fixerProvider')]
-    public function testFixerCanBeRegistered(AbstractFixer $fixer, string $ruleName, bool $isRisky): void
+    #[Test]
+    public function fixerCanBeRegistered(AbstractFixer $fixer, string $ruleName, bool $isRisky): void
     {
         if ($fixer instanceof ConfigurableFixerInterface) {
             $fixer->configure([]);
@@ -54,13 +54,14 @@ final class FixerSmokeTest extends TestCase
             $fixer->setWhitespacesConfig(new WhitespacesFixerConfig('    ', "\n"));
         }
 
-        self::assertSame($ruleName, $fixer->getName());
-        self::assertNotSame('', $fixer->getDefinition()->getSummary());
-        self::assertGreaterThanOrEqual(-100, $fixer->getPriority());
-        self::assertSame($isRisky, $fixer->isRisky());
+        $this->assertSame($ruleName, $fixer->getName());
+        $this->assertNotSame('', $fixer->getDefinition()->getSummary());
+        $this->assertGreaterThanOrEqual(-100, $fixer->getPriority());
+        $this->assertSame($isRisky, $fixer->isRisky());
     }
 
-    public function testAllFixersCanBeUsedAsVixFixerRules(): void
+    #[Test]
+    public function allFixersCanBeUsedAsVixFixerRules(): void
     {
         $rules = [];
 
@@ -73,14 +74,6 @@ final class FixerSmokeTest extends TestCase
         $factory->registerCustomFixers(Fixers::all());
         $factory->useRuleSet(new RuleSet($rules));
 
-        self::assertCount(count($rules), $factory->getFixers());
-    }
-
-    private static function assertFixes(AbstractFixer $fixer, string $expected, string $input): void
-    {
-        $tokens = Tokens::fromCode($input);
-        $fixer->fix(new SplFileInfo(__FILE__), $tokens);
-
-        self::assertSame($expected, $tokens->generateCode());
+        $this->assertCount(count($rules), $factory->getFixers());
     }
 }
