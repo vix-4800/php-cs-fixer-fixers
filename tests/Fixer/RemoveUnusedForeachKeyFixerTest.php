@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
 
 final class RemoveUnusedForeachKeyFixerTest extends AbstractFixerTestCase
 {
-    public function testRemovesUnusedKey(): void
+    #[Test]
+    public function removesUnusedKey(): void
     {
         self::assertFixes(
             new RemoveUnusedForeachKeyFixer(),
@@ -17,7 +19,8 @@ final class RemoveUnusedForeachKeyFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsUsedKey(): void
+    #[Test]
+    public function keepsUsedKey(): void
     {
         self::assertFixes(
             new RemoveUnusedForeachKeyFixer(),
@@ -26,7 +29,8 @@ final class RemoveUnusedForeachKeyFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsDestructuredKey(): void
+    #[Test]
+    public function keepsDestructuredKey(): void
     {
         self::assertFixes(
             new RemoveUnusedForeachKeyFixer(),

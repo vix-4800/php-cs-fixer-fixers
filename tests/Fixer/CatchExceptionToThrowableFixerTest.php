@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\CatchExceptionToThrowableFixer;
 
 final class CatchExceptionToThrowableFixerTest extends AbstractFixerTestCase
 {
-    public function testIsRisky(): void
+    #[Test]
+    public function isRisky(): void
     {
-        self::assertTrue((new CatchExceptionToThrowableFixer())->isRisky());
+        $this->assertTrue(new CatchExceptionToThrowableFixer()->isRisky());
     }
 
-    public function testConvertsSimpleCatch(): void
+    #[Test]
+    public function convertsSimpleCatch(): void
     {
         self::assertFixes(
             new CatchExceptionToThrowableFixer(),
@@ -22,7 +25,8 @@ final class CatchExceptionToThrowableFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testConvertsImportedAlias(): void
+    #[Test]
+    public function convertsImportedAlias(): void
     {
         self::assertFixes(
             new CatchExceptionToThrowableFixer(),
@@ -31,7 +35,8 @@ final class CatchExceptionToThrowableFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsExistingThrowableCatch(): void
+    #[Test]
+    public function keepsExistingThrowableCatch(): void
     {
         self::assertFixes(
             new CatchExceptionToThrowableFixer(),

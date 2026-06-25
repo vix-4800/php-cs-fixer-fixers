@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocOpeningLineFixer;
 
 final class PhpDocOpeningLineFixerTest extends AbstractFixerTestCase
 {
-    public function testSplitsInlineOpeningText(): void
+    #[Test]
+    public function splitsInlineOpeningText(): void
     {
         self::assertFixes(
             new PhpDocOpeningLineFixer(),
@@ -17,7 +19,8 @@ final class PhpDocOpeningLineFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsSingleLineDocblockUnchanged(): void
+    #[Test]
+    public function keepsSingleLineDocblockUnchanged(): void
     {
         self::assertFixes(
             new PhpDocOpeningLineFixer(),
@@ -26,7 +29,8 @@ final class PhpDocOpeningLineFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsCorrectMultilineDocblockUnchanged(): void
+    #[Test]
+    public function keepsCorrectMultilineDocblockUnchanged(): void
     {
         self::assertFixes(
             new PhpDocOpeningLineFixer(),

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
 
 final class PhpDocSeparateThrowsFixerTest extends AbstractFixerTestCase
 {
-    public function testSplitsSimpleUnion(): void
+    #[Test]
+    public function splitsSimpleUnion(): void
     {
         self::assertFixes(
             new PhpDocSeparateThrowsFixer(),
@@ -17,7 +19,8 @@ final class PhpDocSeparateThrowsFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsGenericInnerUnionTogether(): void
+    #[Test]
+    public function keepsGenericInnerUnionTogether(): void
     {
         self::assertFixes(
             new PhpDocSeparateThrowsFixer(),
@@ -26,7 +29,8 @@ final class PhpDocSeparateThrowsFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testLeavesSingleTypeUnchanged(): void
+    #[Test]
+    public function leavesSingleTypeUnchanged(): void
     {
         self::assertFixes(
             new PhpDocSeparateThrowsFixer(),

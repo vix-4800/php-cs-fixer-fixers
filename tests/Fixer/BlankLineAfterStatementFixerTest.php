@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\BlankLineAfterStatementFixer;
 
 final class BlankLineAfterStatementFixerTest extends AbstractFixerTestCase
 {
-    public function testAddsBlankLineAfterIfElseChain(): void
+    #[Test]
+    public function addsBlankLineAfterIfElseChain(): void
     {
         self::assertFixes(
             new BlankLineAfterStatementFixer(),
@@ -17,7 +19,8 @@ final class BlankLineAfterStatementFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testAddsBlankLineAfterConfiguredReturn(): void
+    #[Test]
+    public function addsBlankLineAfterConfiguredReturn(): void
     {
         self::assertFixes(
             new BlankLineAfterStatementFixer(),
@@ -27,7 +30,8 @@ final class BlankLineAfterStatementFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testDoesNotAddBlankLineBeforeCloseBrace(): void
+    #[Test]
+    public function doesNotAddBlankLineBeforeCloseBrace(): void
     {
         self::assertFixes(
             new BlankLineAfterStatementFixer(),

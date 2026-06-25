@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 
 final class RemoveUnusedCatchVariableFixerTest extends AbstractFixerTestCase
 {
-    public function testRemovesUnusedVariable(): void
+    #[Test]
+    public function removesUnusedVariable(): void
     {
         self::assertFixes(
             new RemoveUnusedCatchVariableFixer(),
@@ -17,7 +19,8 @@ final class RemoveUnusedCatchVariableFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsUsedVariable(): void
+    #[Test]
+    public function keepsUsedVariable(): void
     {
         self::assertFixes(
             new RemoveUnusedCatchVariableFixer(),

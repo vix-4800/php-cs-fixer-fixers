@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\NumericLiteralSeparatorFixer;
 
 final class NumericLiteralSeparatorFixerTest extends AbstractFixerTestCase
 {
-    public function testSeparatesLargeInteger(): void
+    #[Test]
+    public function separatesLargeInteger(): void
     {
         self::assertFixes(
             new NumericLiteralSeparatorFixer(),
@@ -17,7 +19,8 @@ final class NumericLiteralSeparatorFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSeparatesFloatIntegerPart(): void
+    #[Test]
+    public function separatesFloatIntegerPart(): void
     {
         self::assertFixes(
             new NumericLiteralSeparatorFixer(),
@@ -26,7 +29,8 @@ final class NumericLiteralSeparatorFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsLeadingZeroIntegerUnchanged(): void
+    #[Test]
+    public function keepsLeadingZeroIntegerUnchanged(): void
     {
         self::assertFixes(
             new NumericLiteralSeparatorFixer(),
@@ -35,7 +39,8 @@ final class NumericLiteralSeparatorFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsExistingSeparatorsAndBasesUnchanged(): void
+    #[Test]
+    public function keepsExistingSeparatorsAndBasesUnchanged(): void
     {
         self::assertFixes(
             new NumericLiteralSeparatorFixer(),

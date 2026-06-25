@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\FluentChainLineBreaksFixer;
 
 final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
 {
-    public function testLeavesSingleLineChainUnchanged(): void
+    #[Test]
+    public function leavesSingleLineChainUnchanged(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -17,7 +19,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSplitsLongMultilineChain(): void
+    #[Test]
+    public function splitsLongMultilineChain(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -26,7 +29,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSplitsFirstCallWhenConfigured(): void
+    #[Test]
+    public function splitsFirstCallWhenConfigured(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -36,7 +40,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSplitsChainInsideMultilineArray(): void
+    #[Test]
+    public function splitsChainInsideMultilineArray(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -46,7 +51,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsFirstCallOnSameLineInsideMultilineArrayByDefault(): void
+    #[Test]
+    public function keepsFirstCallOnSameLineInsideMultilineArrayByDefault(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -55,7 +61,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testLeavesChainInsideArrayOffsetUnchanged(): void
+    #[Test]
+    public function leavesChainInsideArrayOffsetUnchanged(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -64,7 +71,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSkipsChainBelowMinimumCallCount(): void
+    #[Test]
+    public function skipsChainBelowMinimumCallCount(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),
@@ -74,7 +82,8 @@ final class FluentChainLineBreaksFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testSplitsChainAtMinimumCallCount(): void
+    #[Test]
+    public function splitsChainAtMinimumCallCount(): void
     {
         self::assertFixes(
             new FluentChainLineBreaksFixer(),

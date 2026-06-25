@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 
 final class PhpDocSelfReferenceFixerTest extends AbstractFixerTestCase
 {
-    public function testReplacesUnionsAndGenerics(): void
+    #[Test]
+    public function replacesUnionsAndGenerics(): void
     {
         self::assertFixes(
             new PhpDocSelfReferenceFixer(),
@@ -17,7 +19,8 @@ final class PhpDocSelfReferenceFixerTest extends AbstractFixerTestCase
         );
     }
 
-    public function testKeepsFqcnUnchanged(): void
+    #[Test]
+    public function keepsFqcnUnchanged(): void
     {
         self::assertFixes(
             new PhpDocSelfReferenceFixer(),
