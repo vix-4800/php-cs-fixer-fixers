@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
 
+/**
+ * @internal
+ */
+#[CoversClass(RemoveUnusedForeachKeyFixer::class)]
 final class RemoveUnusedForeachKeyFixerTest extends AbstractFixerTestCase
 {
     #[Test]

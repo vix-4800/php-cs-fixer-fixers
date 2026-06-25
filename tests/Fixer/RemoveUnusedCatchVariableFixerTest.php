@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 
+/**
+ * @internal
+ */
+#[CoversClass(RemoveUnusedCatchVariableFixer::class)]
 final class RemoveUnusedCatchVariableFixerTest extends AbstractFixerTestCase
 {
     #[Test]

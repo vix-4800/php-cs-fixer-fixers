@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
 
+/**
+ * @internal
+ */
+#[CoversClass(PhpDocSeparateThrowsFixer::class)]
 final class PhpDocSeparateThrowsFixerTest extends AbstractFixerTestCase
 {
     #[Test]

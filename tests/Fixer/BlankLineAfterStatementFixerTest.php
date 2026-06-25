@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Vix\PhpCsFixerFixers\Tests\Fixer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Vix\PhpCsFixerFixers\Fixer\BlankLineAfterStatementFixer;
 
+/**
+ * @internal
+ */
+#[CoversClass(BlankLineAfterStatementFixer::class)]
 final class BlankLineAfterStatementFixerTest extends AbstractFixerTestCase
 {
     #[Test]
