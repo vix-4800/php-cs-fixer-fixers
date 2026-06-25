@@ -154,14 +154,14 @@ final class FluentChainLineBreaksFixer extends AbstractFixer implements Configur
         return new FixerConfigurationResolver([
             new FixerOptionBuilder('break_on_first_call', 'Whether the first chained method call should start on a new line.')
                 ->setAllowedTypes(['bool'])
-                ->setDefault(default: false)
+                ->setDefault(false)
                 ->getOption(),
             new FixerOptionBuilder('min_chain_calls', 'Minimum number of chained method calls required before formatting. Null disables the limit.')
                 ->setAllowedTypes(['null', 'int'])
                 ->setAllowedValues([
                     static fn(mixed $value): bool => $value === null || (is_int($value) && $value > 0),
                 ])
-                ->setDefault(default: null)
+                ->setDefault(null)
                 ->getOption(),
         ]);
     }
