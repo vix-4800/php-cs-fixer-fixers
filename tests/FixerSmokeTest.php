@@ -23,6 +23,7 @@ use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
+use Vix\PhpCsFixerFixers\Fixer\ThisNullsafeOperatorFixer;
 use Vix\PhpCsFixerFixers\Fixers;
 
 /**
@@ -63,6 +64,7 @@ final class FixerSmokeTest extends TestCase
         yield 'phpdoc_separate_throws' => [new PhpDocSeparateThrowsFixer(), 'VixFixer/phpdoc_separate_throws', false];
         yield 'remove_unused_catch_variable' => [new RemoveUnusedCatchVariableFixer(), 'VixFixer/remove_unused_catch_variable', false];
         yield 'remove_unused_foreach_key' => [new RemoveUnusedForeachKeyFixer(), 'VixFixer/remove_unused_foreach_key', false];
+        yield 'this_nullsafe_operator' => [new ThisNullsafeOperatorFixer(), 'VixFixer/this_nullsafe_operator', false];
     }
 
     #[Test]

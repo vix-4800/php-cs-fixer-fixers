@@ -14,6 +14,7 @@ use Vix\PhpCsFixerFixers\Fixer\PhpDocSelfReferenceFixer;
 use Vix\PhpCsFixerFixers\Fixer\PhpDocSeparateThrowsFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedCatchVariableFixer;
 use Vix\PhpCsFixerFixers\Fixer\RemoveUnusedForeachKeyFixer;
+use Vix\PhpCsFixerFixers\Fixer\ThisNullsafeOperatorFixer;
 
 final class Fixers
 {
@@ -32,6 +33,7 @@ final class Fixers
             new PhpDocSeparateThrowsFixer(),
             new RemoveUnusedCatchVariableFixer(),
             new RemoveUnusedForeachKeyFixer(),
+            new ThisNullsafeOperatorFixer(),
         ];
     }
 }

@@ -17,6 +17,7 @@ Each section includes a short description, configuration parameters, and a minim
   - [VixFixer/phpdoc\_separate\_throws](#vixfixerphpdoc_separate_throws)
   - [VixFixer/remove\_unused\_catch\_variable](#vixfixerremove_unused_catch_variable)
   - [VixFixer/remove\_unused\_foreach\_key](#vixfixerremove_unused_foreach_key)
+  - [VixFixer/this\_nullsafe\_operator](#vixfixerthis_nullsafe_operator)
 
 ## VixFixer/blank_line_after_statement
 
@@ -247,4 +248,24 @@ After:
 foreach ($items as $item) {
     echo $item;
 }
+```
+
+## VixFixer/this_nullsafe_operator
+
+Replaces redundant nullsafe operators on `$this` with regular object operators.
+
+Parameters:
+
+- None.
+
+Before:
+
+```php
+$this?->foo();
+```
+
+After:
+
+```php
+$this->foo();
 ```
